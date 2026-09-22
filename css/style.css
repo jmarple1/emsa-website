@@ -178,6 +178,14 @@ a:hover {
   text-decoration-thickness: 2px;
 }
 
+/* Let grid and flex children shrink to fit narrow screens. Without this,
+   a child with aspect-ratio (such as a photo placeholder) can refuse to get
+   narrower than its content and push past the edge of a phone screen. */
+:where(.hero-grid, .group-layout, .group-media, .programs, .tiles, .split,
+       .footer-grid, .stats, .people, .semester, .partner-list, .person) > * {
+  min-width: 0;
+}
+
 /* Remove the bottom margin from the last item inside common containers */
 :where(.page-head .wrap, .hero-text, .tile-body, .program, .card, .notice,
        .placeholder, .text-tile, .cta-band .wrap, .footer-brand, .split > div) > :last-child {
