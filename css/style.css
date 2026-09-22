@@ -316,6 +316,7 @@ a:hover {
 
 .header-bar {
   display: flex;
+  flex-wrap: wrap;  /* very narrow screens or large text sizes wrap instead of overflowing */
   align-items: center;
   gap: 0.5rem;
   min-height: 4rem;
@@ -397,6 +398,18 @@ a:hover {
   min-height: 2.75rem;
   padding: 0.5rem 0.9rem;
   white-space: nowrap;
+}
+
+/* The smallest phones (under 360px): trim side padding so the badge, Menu,
+   and Join EMSA still fit on one row. */
+@media (max-width: 22.49em) {
+  .menu-toggle {
+    padding-inline: 0.55rem;
+  }
+
+  .btn-join {
+    padding-inline: 0.65rem;
+  }
 }
 
 /* Main navigation without JavaScript.
