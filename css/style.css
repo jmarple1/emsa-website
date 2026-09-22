@@ -1,0 +1,1318 @@
+/* ==========================================================================
+   EMS Alliance (EMSA) website: shared stylesheet
+   --------------------------------------------------------------------------
+   Every page links to this one file. Plain CSS: no preprocessor, no build
+   step, no web fonts, and no JavaScript needed for anything below.
+
+   Mobile-first: the base rules are for phones. Media queries in each section
+   add layout for wider screens, using three width breakpoints:
+     30em  (480px)   large phones
+     48em  (768px)   tablets
+     64em (1024px)   laptops and desktops
+
+   Contents
+     1. Design tokens (colors, type scale, spacing)
+     2. Base elements
+     3. Accessibility helpers (skip link, focus ring, visually hidden)
+     4. Layout helpers
+     5. Header and main navigation
+     6. Buttons
+     7. Page sections (page head, hero, impact band, call-to-action band)
+     8. Components (tiles, programs, text tile, lists, notices,
+        placeholders, embeds, FAQ, people)
+     9. Photo crops
+    10. Footer
+   ========================================================================== */
+
+
+/* 1. Design tokens
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Colors. Every text/background pair used on the site meets WCAG 2.1 AA
+     (4.5:1 or better); MORNING-REVIEW.md lists the measured ratios.
+     If you change a color, re-check its contrast before publishing. */
+  --navy-900: #0B2A45;     /* headings, footer, dark bands */
+  --navy-700: #14406B;     /* secondary buttons, menu button */
+  --blue-600: #1C5D99;     /* links */
+  --red-600: #B3261E;      /* Join EMSA button, emergency panel */
+  --red-700: #8E1F18;      /* Join EMSA button on hover */
+  --red-050: #FDF0EF;      /* alert notice background */
+  --teal-700: #0F6B64;     /* accents, Stop the Bleed text tile */
+  --teal-050: #E7F3F1;     /* light teal band */
+  --ink: #1B2631;          /* body text */
+  --ink-muted: #4A5663;    /* secondary text */
+  --paper: #FFFFFF;        /* page background */
+  --mist: #F1F5F9;         /* alternate section background */
+  --line: #D3DCE5;         /* decorative hairlines */
+  --line-strong: #7B8794;  /* borders that must stay visible (3:1) */
+  --amber-050: #FFF6DB;    /* placeholder background */
+  --amber-700: #7A5200;    /* placeholder border and tag */
+  --footer-text: #E3EAF1;
+  --footer-muted: #C3CFDB;
+  --focus-dark: #0B2A45;   /* focus ring on light backgrounds */
+  --focus-light: #FFD166;  /* focus ring on dark and red backgrounds */
+
+  /* Type. System fonts only: fast, private (no font requests), nothing to host. */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --text-sm: 0.9375rem;                                   /* 15px */
+  --text-base: 1.0625rem;                                 /* 17px body */
+  --text-lg: clamp(1.1875rem, 1.12rem + 0.3vw, 1.3125rem);  /* 19-21px lead text */
+  --text-xl: clamp(1.1875rem, 1.1rem + 0.45vw, 1.375rem);   /* 19-22px h3 */
+  --text-2xl: clamp(1.625rem, 1.4rem + 1.1vw, 2.125rem);    /* 26-34px h2 */
+  --text-3xl: clamp(2rem, 1.62rem + 1.9vw, 3rem);           /* 32-48px h1 */
+
+  /* Spacing and shape */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: clamp(2.5rem, 2rem + 2.5vw, 4.5rem);  /* section padding */
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --wrap: 72rem;      /* widest content column */
+  --measure: 42rem;   /* comfortable line length for paragraphs */
+  --gutter: 1rem;     /* page side padding (16px on phones) */
+}
+
+@media (min-width: 48em) {
+  :root { --gutter: 2rem; }
+}
+
+
+/* 2. Base elements
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+figure {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 0.5em;
+  color: var(--navy-900);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-3xl);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+h2 {
+  font-size: var(--text-2xl);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: var(--text-xl);
+}
+
+p,
+ul,
+ol,
+dl {
+  margin: 0 0 1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.4rem;
+}
+
+li + li {
+  margin-top: 0.375rem;
+}
+
+ol > li::marker {
+  color: var(--navy-900);
+  font-weight: 700;
+}
+
+a {
+  color: var(--blue-600);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--navy-900);
+  text-decoration-thickness: 2px;
+}
+
+/* Remove the bottom margin from the last item inside common containers */
+:where(.page-head .wrap, .hero-text, .tile-body, .program, .card, .notice,
+       .placeholder, .text-tile, .cta-band .wrap, .footer-brand, .split > div) > :last-child {
+  margin-bottom: 0;
+}
+
+
+/* 3. Accessibility helpers
+   ========================================================================== */
+
+/* "Skip to main content" link: hidden until it receives keyboard focus */
+.skip-link {
+  position: absolute;
+  top: -10rem;
+  left: var(--gutter);
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--navy-900);
+  color: #fff;
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+.skip-link:hover {
+  color: #fff;
+}
+
+/* Visible focus ring for keyboard users on every interactive element */
+:focus-visible {
+  outline: 3px solid var(--focus-dark);
+  outline-offset: 3px;
+}
+
+/* On dark or red backgrounds, switch to a light focus ring */
+.on-dark :focus-visible {
+  outline-color: var(--focus-light);
+}
+
+/* Hide text visually but keep it available to screen readers */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* 4. Layout helpers
+   ========================================================================== */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--space-xl);
+}
+
+.section-alt {
+  background: var(--mist);
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+.section-intro {
+  max-width: var(--measure);
+  font-size: var(--text-lg);
+  line-height: 1.5;
+}
+
+/* Two columns side by side on tablets and up */
+.split {
+  display: grid;
+  gap: var(--space-md);
+}
+
+@media (min-width: 48em) {
+  .split {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+}
+
+
+/* 5. Header and main navigation
+   ========================================================================== */
+
+.site-header {
+  position: relative;
+  z-index: 100;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+/* Keep the header (and its Join EMSA button) on screen while scrolling,
+   but only when the window is tall enough that it doesn't crowd the page
+   (landscape phones and heavily zoomed screens get a normal header). */
+@media (min-height: 28em) {
+  html {
+    scroll-padding-top: 5rem;  /* in-page links land below the sticky header */
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+  }
+}
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 4rem;
+  padding-block: 0.5rem;
+}
+
+/* Text wordmark (stands in until EMSA logo files exist) */
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-right: auto;
+  color: var(--navy-900);
+  text-decoration: none;
+}
+
+.wordmark:hover {
+  color: var(--navy-900);
+}
+
+.wordmark-badge {
+  display: inline-block;
+  padding: 0.45rem 0.55rem 0.4rem;
+  border-radius: 0.375rem;
+  background: var(--navy-900);
+  color: #fff;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.wordmark-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* Small phones: show only the EMSA badge. The full name stays in the link
+   text for screen readers. */
+@media (max-width: 29.99em) {
+  .wordmark-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* "Menu" and "Close menu" links (phones and tablets only) */
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--navy-700);
+  border-radius: var(--radius-sm);
+  color: var(--navy-700);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.menu-toggle:hover {
+  background: var(--navy-700);
+  color: #fff;
+}
+
+.menu-close {
+  display: none;
+}
+
+.btn-join {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.9rem;
+  white-space: nowrap;
+}
+
+/* Main navigation without JavaScript.
+   Phones and tablets: the nav is hidden until someone follows the "Menu"
+   link, which points to #site-nav. The browser then treats the nav as the
+   page's :target and the rule below shows it. "Close menu" points to #main,
+   which hides it again. Wide screens always show the nav. */
+.site-nav {
+  display: none;
+  border-top: 1px solid var(--line);
+}
+
+.site-nav:target {
+  display: block;
+}
+
+/* While the phone menu is open: swap "Menu" for "Close menu", and let the
+   header scroll normally so the whole menu can be reached. */
+.site-header:has(.site-nav:target) {
+  position: relative;
+}
+
+.site-header:has(.site-nav:target) .menu-open {
+  display: none;
+}
+
+.site-header:has(.site-nav:target) .menu-close {
+  display: inline-flex;
+}
+
+.nav-list {
+  margin-block: 0;
+  padding-block: 0.25rem 1rem;
+  list-style: none;
+}
+
+.nav-list li + li {
+  margin-top: 0;
+}
+
+.nav-list a {
+  display: block;
+  padding: 0.75rem 0.25rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--navy-900);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav-list a:hover {
+  color: var(--blue-600);
+  text-decoration: underline;
+}
+
+/* Current page: a thick underline, so it isn't shown by color alone */
+.nav-list a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-color: var(--red-600);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.4em;
+}
+
+.nav-list a.nav-emergency {
+  color: var(--red-600);
+}
+
+@media (min-width: 64em) {
+  html {
+    scroll-padding-top: 8.5rem;  /* two-row header on wide screens */
+  }
+
+  .menu-toggle,
+  .site-header:has(.site-nav:target) .menu-close {
+    display: none;
+  }
+
+  .site-nav {
+    display: block;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.25rem;
+    padding-block: 0;
+  }
+
+  .nav-list a {
+    padding: 0.7rem 0.75rem;
+    border-bottom: 0;
+  }
+
+  .nav-list li:first-child a {
+    padding-left: 0;
+  }
+}
+
+/* Wide screens keep the header sticky even if #site-nav is in the URL */
+@media (min-width: 64em) and (min-height: 28em) {
+  .site-header:has(.site-nav:target) {
+    position: sticky;
+  }
+}
+
+
+/* 6. Buttons
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.875rem;
+  padding: 0.65rem 1.25rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Primary: Join EMSA and other main actions */
+.btn-primary {
+  background: var(--red-600);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--red-700);
+  color: #fff;
+}
+
+/* Secondary: outlined */
+.btn-secondary {
+  border-color: var(--navy-700);
+  background: var(--paper);
+  color: var(--navy-700);
+}
+
+.btn-secondary:hover {
+  background: var(--navy-700);
+  color: #fff;
+}
+
+.btn-lg {
+  min-height: 3.25rem;
+  padding: 0.8rem 1.75rem;
+  font-size: var(--text-lg);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+
+/* 7. Page sections
+   ========================================================================== */
+
+/* Heading area at the top of every page except Home */
+.page-head {
+  padding-block: var(--space-lg) 2rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--mist);
+}
+
+.lead {
+  max-width: var(--measure);
+  font-size: var(--text-lg);
+  line-height: 1.5;
+}
+
+/* "On this page" jump links */
+.toc ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc li + li {
+  margin-top: 0;
+}
+
+.toc a {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--navy-900);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  border-color: var(--navy-700);
+  background: var(--navy-700);
+  color: #fff;
+}
+
+/* Home hero: text first on phones, photo beside it on wide screens */
+.hero {
+  padding-block: 1.75rem var(--space-lg);
+  background: var(--mist);
+}
+
+.hero-grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.hero-media img {
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+/* Quick facts shown as pills under the Join button */
+.fast-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.fast-facts li {
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--navy-900);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+@media (min-width: 64em) {
+  .hero {
+    padding-block: var(--space-xl);
+  }
+
+  /* Photo on the left, text on the right (text stays first in the HTML) */
+  .hero-grid {
+    grid-template-columns: 7fr 5fr;
+    grid-template-areas: "media text";
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .hero-text {
+    grid-area: text;
+  }
+
+  .hero-media {
+    grid-area: media;
+  }
+}
+
+/* Impact band (Home). The D photo sits under an 88% navy overlay so white
+   text always passes contrast (about 10:1 even over the photo's whitest spot). */
+.impact {
+  padding-block: var(--space-xl);
+  background:
+    linear-gradient(rgb(11 42 69 / 0.88), rgb(11 42 69 / 0.88)),
+    url("../photos/D-harm-reduction-kits-table.jpg") center / cover no-repeat,
+    var(--navy-900);
+  color: #fff;
+}
+
+.impact h2 {
+  color: #fff;
+}
+
+.stats {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.stats li {
+  margin: 0;
+}
+
+.stat-number {
+  display: block;
+  font-size: clamp(2.5rem, 2rem + 2.2vw, 3.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: var(--text-lg);
+  line-height: 1.4;
+}
+
+.recognition-line {
+  margin: 0;
+  padding-top: var(--space-sm);
+  border-top: 1px solid rgb(255 255 255 / 0.3);
+  font-weight: 700;
+}
+
+@media (min-width: 48em) {
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Stats on a light background (About page) */
+.stats--cards {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+
+.stats--cards li {
+  padding: var(--space-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.stats--cards .stat-number {
+  color: var(--navy-900);
+  font-size: clamp(2rem, 1.8rem + 1vw, 2.5rem);
+}
+
+.stats--cards .stat-label {
+  font-size: var(--text-base);
+}
+
+@media (min-width: 48em) {
+  .stats--cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Call-to-action band near the end of a page */
+.cta-band {
+  padding-block: var(--space-xl);
+  border-top: 1px solid var(--line);
+  background: var(--teal-050);
+}
+
+.cta-band p {
+  max-width: var(--measure);
+}
+
+/* Emergency page heading panel */
+.emergency-head {
+  padding-block: var(--space-lg);
+  background: var(--red-600);
+  color: #fff;
+}
+
+.emergency-head h1 {
+  margin-bottom: 0.2em;
+  color: #fff;
+  font-size: clamp(3rem, 2.2rem + 4vw, 5rem);
+}
+
+.emergency-head .lead {
+  margin-bottom: 0;
+  color: #fff;
+  font-weight: 600;
+}
+
+
+/* 8. Components
+   ========================================================================== */
+
+/* Program tiles (Home) */
+.tiles {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tiles > li {
+  margin: 0;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.tile-media img,
+.tile-media .placeholder {
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+
+.tile-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--space-md);
+}
+
+.tile-link {
+  margin-top: auto;
+  font-weight: 700;
+}
+
+@media (min-width: 48em) {
+  .tiles {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tile-body {
+    padding: 1.25rem;
+  }
+}
+
+/* Partner and affiliation names (text only, never logos) */
+.partner-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.partner-list li {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--teal-700);
+  background: var(--paper);
+  color: var(--navy-900);
+  font-weight: 600;
+}
+
+@media (min-width: 48em) {
+  .partner-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Program groups (What We Do, CPR Classes): photos beside program cards */
+.group-layout {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.group-media {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.group-media img {
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+.programs {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.program {
+  padding: var(--space-md);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--teal-700);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.program h3 {
+  margin-bottom: 0.4em;
+}
+
+.program-who {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.program-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.group-join {
+  margin: var(--space-md) 0 0;
+  font-weight: 600;
+}
+
+@media (min-width: 48em) {
+  .group-media--pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 64em) {
+  .group-layout {
+    grid-template-columns: 5fr 7fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .group-media--pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Text tile: stands in for the Stop the Bleed photo until a reshoot.
+   Words only: never add the Stop the Bleed or ACS logo here. */
+.text-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  min-height: 9rem;
+  padding: var(--space-md);
+  border-radius: var(--radius);
+  background-color: var(--teal-700);
+  background-image: repeating-linear-gradient(135deg, rgb(255 255 255 / 0.07) 0 14px, transparent 14px 28px);
+  color: #fff;
+}
+
+.text-tile-title {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.text-tile-sub {
+  margin: 0;
+}
+
+@media (min-width: 48em) {
+  .group-media--pair .text-tile {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Generic card */
+.card {
+  padding: var(--space-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+/* List with check marks (drawn with CSS, so screen readers skip them) */
+.checklist {
+  padding: 0;
+  list-style: none;
+}
+
+.checklist li {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.checklist li::before {
+  content: "";
+  position: absolute;
+  top: 0.3em;
+  left: 0.35rem;
+  width: 0.45rem;
+  height: 0.85rem;
+  border: solid var(--teal-700);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+/* A typical semester (Join) */
+.semester {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.semester li {
+  margin: 0;
+  padding: var(--space-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  line-height: 1.35;
+}
+
+.semester-number {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--teal-700);
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+@media (min-width: 48em) {
+  .semester {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Label/value list (class details) */
+.facts {
+  margin: 0 0 1rem;
+}
+
+.facts > div {
+  display: grid;
+  gap: 0.15rem;
+  padding-block: 0.875rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.facts > div:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.facts dt {
+  color: var(--navy-900);
+  font-weight: 700;
+}
+
+.facts dd {
+  margin: 0;
+}
+
+@media (min-width: 48em) {
+  .facts > div {
+    grid-template-columns: 11rem 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Notices: highlighted notes such as "EMSA does not respond to emergencies" */
+.notice {
+  margin: 0 0 var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-left: 5px solid var(--navy-700);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--mist);
+}
+
+.notice--alert {
+  border-left-color: var(--red-600);
+  background: var(--red-050);
+}
+
+/* Placeholders mark content Max still has to supply. Each one sits next to
+   a <!-- TODO --> comment in the HTML and is listed in MORNING-REVIEW.md.
+   Delete the placeholder once the real content is in place. */
+.placeholder {
+  margin: 0 0 var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border: 2px dashed var(--amber-700);
+  border-radius: var(--radius-sm);
+  background: var(--amber-050);
+  color: var(--ink);
+}
+
+.placeholder-tag {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--amber-700);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: 0.1em;
+}
+
+/* Placeholder standing in for a photo */
+.placeholder--media {
+  display: grid;
+  place-content: center;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  text-align: center;
+}
+
+.placeholder--headshot {
+  display: grid;
+  place-content: center;
+  width: 6rem;
+  aspect-ratio: 1;
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* Embedded Google Forms and Calendar */
+.embed {
+  margin: 0 0 var(--space-md);
+}
+
+.embed iframe {
+  width: 100%;  /* overrides any width="640" pasted from Google's embed code */
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}
+
+.embed .placeholder {
+  margin-bottom: 0;
+  border-bottom: 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.embed .placeholder + iframe {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* FAQ */
+.faq-group + .faq-group {
+  margin-top: var(--space-lg);
+}
+
+.faq h3 {
+  margin: var(--space-md) 0 0.35em;
+  font-size: var(--text-lg);
+}
+
+.faq p {
+  max-width: var(--measure);
+}
+
+/* People (About: leadership) */
+.people {
+  display: grid;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.people > li {
+  margin: 0;
+}
+
+.person {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.person-name {
+  margin: 0;
+  color: var(--navy-900);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.person-role {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+@media (min-width: 48em) {
+  .people {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .person {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .person .placeholder--headshot {
+    width: 100%;
+    max-width: 12rem;
+    font-size: var(--text-sm);
+  }
+}
+
+/* Award photo (About): portrait, next to the recognition text */
+.award-photo img {
+  width: 100%;
+  max-width: 20rem;
+  border-radius: var(--radius);
+}
+
+@media (min-width: 48em) {
+  .award-photo img {
+    max-width: 28rem;
+  }
+}
+
+
+/* 9. Photo crops
+   --------------------------------------------------------------------------
+   The photo files are never edited by the site; these rules crop them on
+   screen. When a finished original arrives, export it at the right crop
+   and delete the matching rule.
+   ========================================================================== */
+
+/* 4:3 frame for landscape tiles */
+.crop-4x3 {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* B (placeholder screenshot, portrait): keep the front student and manikin
+   in the 4:3 frame */
+.photo-b {
+  object-position: 50% 55%;
+}
+
+/* E (placeholder screenshot, 860 x 680). Its left half shows a card with the
+   Miami M, which Max has not cleared, so PHOTO-DIRECTIONS says to crop to
+   the right half. This frame shows only the region x 405-705, y 190-570 of
+   the file (the test strip and naloxone materials):
+     width 860/300 = 286.667%, left -405/300 = -135%, top -190/380 = -50%. */
+.photo-e-frame {
+  position: relative;
+  max-width: 22rem;
+  aspect-ratio: 300 / 380;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.photo-e-frame img {
+  position: absolute;
+  top: -50%;
+  left: -135%;
+  width: 286.667%;
+  max-width: none;
+  height: auto;
+}
+
+
+/* 10. Footer
+   ========================================================================== */
+
+.site-footer {
+  padding-block: var(--space-lg) var(--space-md);
+  background: var(--navy-900);
+  color: var(--footer-text);
+  font-size: var(--text-sm);
+}
+
+.site-footer a {
+  color: #fff;
+}
+
+.site-footer a:hover {
+  color: #fff;
+  text-decoration-thickness: 2px;
+}
+
+.footer-grid {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.footer-name {
+  margin-bottom: 0.25rem;
+  color: #fff;
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.footer-nav ul {
+  columns: 2;
+  column-gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-nav li {
+  margin: 0;
+  padding-block: 0.3rem;
+  break-inside: avoid;
+}
+
+/* Recognition strip: text only, above the disclaimers (brief section 11) */
+.recognition-strip {
+  margin: var(--space-lg) 0 0;
+  padding-block: var(--space-sm);
+  border-block: 1px solid rgb(255 255 255 / 0.25);
+  color: #fff;
+  font-weight: 700;
+}
+
+.disclaimers {
+  padding-top: var(--space-sm);
+  color: var(--footer-muted);
+  font-size: 0.875rem;
+}
+
+.disclaimers p {
+  max-width: 62rem;
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 48em) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
