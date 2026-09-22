@@ -188,7 +188,7 @@ a:hover {
 
 /* Remove the bottom margin from the last item inside common containers */
 :where(.page-head .wrap, .hero-text, .tile-body, .program, .card, .notice,
-       .placeholder, .text-tile, .cta-band .wrap, .footer-brand, .split > div) > :last-child {
+       .placeholder, .text-tile, .cta-band .wrap, .footer-brand, .split > *) > :last-child {
   margin-bottom: 0;
 }
 
@@ -263,6 +263,10 @@ a:hover {
 
 .measure {
   max-width: var(--measure);
+}
+
+.rounded {
+  border-radius: var(--radius);
 }
 
 .section-intro {
