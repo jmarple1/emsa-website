@@ -5,10 +5,12 @@
    step, no web fonts, and no JavaScript needed for anything below.
 
    Mobile-first: the base rules are for phones. Media queries in each section
-   add layout for wider screens, using three width breakpoints:
-     30em  (480px)   large phones
-     48em  (768px)   tablets
-     64em (1024px)   laptops and desktops
+   add layout for wider screens, using these width breakpoints:
+     22.5em (360px)  below this, slightly tighter header buttons
+     30em  (480px)   from here up, the full "EMS Alliance" name shows in the header
+     48em  (768px)   tablets: two- and three-column grids
+     64em (1024px)   laptops and desktops: full navigation, side-by-side layouts
+   The header is sticky only when the window is at least 28em tall.
 
    Contents
      1. Design tokens (colors, type scale, spacing)
@@ -530,6 +532,8 @@ a:hover {
   line-height: 1.25;
   text-align: center;
   text-decoration: none;
+  max-width: 100%;
+  overflow-wrap: anywhere;  /* long words wrap instead of overflowing at large text sizes */
 }
 
 /* Primary: Join EMSA and other main actions */
@@ -1103,6 +1107,12 @@ a:hover {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   vertical-align: 0.1em;
+  max-width: 100%;  /* at very large text sizes the word breaks instead of overflowing */
+}
+
+/* A placeholder inside a program card needs less padding */
+.program .placeholder {
+  padding: var(--space-xs) var(--space-sm);
 }
 
 /* Placeholder standing in for a photo */
@@ -1242,33 +1252,37 @@ a:hover {
   object-fit: cover;
 }
 
-/* B (placeholder screenshot, portrait): keep the front student and manikin
-   in the 4:3 frame */
-.photo-b {
-  object-position: 50% 55%;
+/* B (placeholder screenshot, 1006 x 1360). A 4:3 frame showing only the
+   region x 0-600, y 790-1240 of the file: hands, bag-valve mask, and manikin
+   (the "hands on a manikin" close-up from the brief's shot list). The rest of
+   the frame is kept off screen because it shows faces whose consent is
+   pending, a high school name on the front student's shirt (PHOTO-DIRECTIONS:
+   never show school names; if a crop is close, cut more), and a Miami shirt.
+     width 1006/600 = 167.667%, left 0, top -790/450 = -175.556%
+   The full file is still served, so export the original at this crop. */
+.photo-b-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
 }
 
-/* E (placeholder screenshot, 860 x 680). Its left half shows a card with the
-   Miami M, which Max has not cleared, so PHOTO-DIRECTIONS says to crop to
-   the right half. This frame shows only the region x 405-705, y 190-570 of
-   the file (the test strip and naloxone materials):
-     width 860/300 = 286.667%, left -405/300 = -135%, top -190/380 = -50%. */
-.photo-e-frame {
-  position: relative;
-  max-width: 22rem;
-  aspect-ratio: 300 / 380;
-  overflow: hidden;
+.photo-b-frame .photo-b {
+  position: absolute;
+  top: -175.556%;
+  left: 0;
+  width: 167.667%;
+  max-width: none;
+  height: auto;
+  border-radius: 0;
+}
+
+.group-media .photo-b-frame {
   border-radius: var(--radius);
 }
 
-.photo-e-frame img {
-  position: absolute;
-  top: -50%;
-  left: -135%;
-  width: 286.667%;
-  max-width: none;
-  height: auto;
-}
+/* Photo E is not used until its original arrives: its left half shows a
+   card with the Miami M, and a CSS crop would still serve that logo (for
+   example in reader view or through the image's own URL). See naloxone.html. */
 
 
 /* 10. Footer

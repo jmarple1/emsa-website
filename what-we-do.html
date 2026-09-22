@@ -57,9 +57,10 @@
         <p class="section-intro">Free, hands-on classes on campus. EMSA's co-presidents, Max Ilecki and Jordan Vandeventer, are certified AHA instructors.</p>
         <div class="group-layout">
           <div class="group-media group-media--pair">
-            <!-- TODO: consent. Photo B is a placeholder screenshot with identifiable faces, and consent is still pending.
-                 Swap in the original, cropped to 4:3, when Max sends it; publish only after Max confirms consent. -->
-            <img class="crop-4x3 photo-b" src="photos/B-training-tile-PLACEHOLDER-send-original.jpg" alt="A student practices rescue breaths with a bag-valve mask during an EMSA CPR class." width="1006" height="1360" loading="lazy">
+            <!-- TODO: photo. Photo B is a placeholder screenshot. The .photo-b-frame rule in css/style.css shows only the
+                 hands-on-manikin close-up, which keeps faces (consent pending), a high school name, and a Miami shirt off screen,
+                 but the full file is still served. Export the original at that crop (or any crop without faces or school names). -->
+            <div class="photo-b-frame"><img class="photo-b" src="photos/B-training-tile-PLACEHOLDER-send-original.jpg" alt="A student practices rescue breaths with a bag-valve mask during an EMSA CPR class." width="1006" height="1360" loading="lazy"></div>
             <!-- TODO: photo. This text tile stands in for a Stop the Bleed photo until the reshoot
                  (practice on a trainer or the supplies table, projector off or out of frame).
                  Never use the Stop the Bleed or American College of Surgeons logo. -->
@@ -102,7 +103,7 @@
             <article class="program">
               <h3>Project DAWN Naloxone Distribution</h3>
               <p>Free naloxone on campus through Ohio's Project DAWN program, including a Narcan distribution night each semester. Naloxone can reverse an opioid overdose, so having it on hand can save a life.</p>
-              <p class="program-who"><strong>Who it's for:</strong> Anyone who wants naloxone on hand, for themselves or for their chapter house.</p>
+              <p class="program-who"><strong>Who it's for:</strong> Anyone on campus who wants naloxone on hand, for themselves or for their chapter house.</p>
               <p class="program-actions"><a class="btn btn-secondary" href="naloxone.html#request">Request naloxone</a></p>
             </article>
             <article class="program">
@@ -141,14 +142,16 @@
             </article>
             <article class="program">
               <h3>AHA Heart Club</h3>
-              <!-- TODO: content. Add one line on what the Heart Club does; the brief gives no detail on its activities. -->
               <p>EMSA runs an American Heart Association Heart Club as one of its programs.</p>
-              <p class="program-who"><strong>Who it's for:</strong> EMSA members.</p>
+              <!-- TODO: content. Add what the Heart Club does and who it's for; the brief gives no detail on either. -->
+              <div class="placeholder">
+                <p><span class="placeholder-tag">Placeholder</span> What the Heart Club does and who it's for.</p>
+              </div>
               <p class="program-actions"><a class="btn btn-secondary" href="join.html">Get involved with the Heart Club</a></p>
             </article>
           </div>
         </div>
-        <p class="group-join">Every semester includes a K–6 Outreach event, and the Outreach Team is there if you want more. <a href="join.html">Join EMSA</a></p>
+        <p class="group-join">Every semester includes a K–6 Outreach event. <a href="join.html">Join EMSA</a> to take part.</p>
       </div>
     </section>
 
