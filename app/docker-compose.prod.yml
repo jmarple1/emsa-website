@@ -1,0 +1,42 @@
+# ============================================================
+# Production overrides for the shared EC2 server (18.189.134.211),
+# where EMSA runs next to KnottSoDirtyCo.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# - Images are built on a PC and copied to the server (scripts/deploy.sh);
+#   the 1 GB server is too small to build Angular.
+# - KnottSoDirty's nginx container owns ports 80/443 and handles HTTPS for
+#   both domains. It reaches EMSA's nginx over the shared "edge" network,
+#   so EMSA publishes no ports of its own (set HTTP_PORT=127.0.0.1:8088 in
+#   .env so it's only reachable from the server itself, for debugging).
+# ============================================================
+
+# Keep container logs small; the server's disk is only 8 GB.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  postgres:
+    logging: *logging
+
+  backend:
+    image: emsa-backend:latest
+    pull_policy: never
+    logging: *logging
+
+  frontend:
+    image: emsa-frontend:latest
+    pull_policy: never
+    container_name: emsa-frontend
+    logging: *logging
+    networks:
+      - internal
+      - edge
+
+networks:
+  edge:
+    external: true
