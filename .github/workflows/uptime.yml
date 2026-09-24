@@ -1,0 +1,37 @@
+# Hourly uptime check for the live sites. GitHub emails the repo owner when
+# a scheduled run fails, so a failure here means "go look at the server".
+# Scheduled workflows run from the default branch (main) only.
+# Note: GitHub pauses schedules after 60 days with no commits to the repo;
+# re-enable it from the Actions tab if that happens.
+name: Uptime check
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Sites respond
+        run: |
+          fail=0
+          for url in https://emsamu.site/ https://emsamu.site/api/health https://knottsodirty.co/; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 --retry 2 --retry-delay 20 "$url")
+            echo "$url -> $code"
+            [ "$code" = "200" ] || fail=1
+          done
+          exit $fail
+
+      - name: Certificates are not about to expire
+        run: |
+          fail=0
+          for host in emsamu.site knottsodirty.co; do
+            end=$(echo | openssl s_client -servername "$host" -connect "$host:443" 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+            days=$(( ($(date -d "$end" +%s) - $(date +%s)) / 86400 ))
+            echo "$host certificate expires $end ($days days)"
+            [ "$days" -ge 14 ] || fail=1
+          done
+          exit $fail
