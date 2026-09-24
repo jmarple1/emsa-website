@@ -11,30 +11,22 @@
       <p><strong>In an emergency, call 911.</strong> EMSA does not respond to emergencies.</p>
     </div>
     <div class="split">
-      <section aria-labelledby="email-title">
-        <h2 id="email-title">Email</h2>
-        <!-- Edited at /admin > Site content > "Contact email". The EMSA entity email only, never a personal address. -->
-        @if (content.get('contact_email'); as email) {
+      <!-- Edited at /admin > Site content > "Contact email" (the EMSA entity email only, never a personal address). -->
+      @if (content.get('contact_email'); as email) {
+        <section aria-labelledby="email-title">
+          <h2 id="email-title">Email</h2>
           <p><a [href]="'mailto:' + email">{{ email }}</a></p>
-        } @else {
-          <div class="placeholder">
-            <p><span class="placeholder-tag">Placeholder</span> EMSA's email address goes here.</p>
-          </div>
-        }
-      </section>
-      <section aria-labelledby="social-title">
-        <h2 id="social-title">Social media</h2>
-        <!-- Edited at /admin > Site content > "Social media links". Name each link after the platform, e.g. "EMSA on Instagram". -->
-        @if (content.links('social_links').length) {
+        </section>
+      }
+      <!-- Edited at /admin > Site content > "Social media links". Name each link after the platform. -->
+      @if (content.links('social_links').length) {
+        <section aria-labelledby="social-title">
+          <h2 id="social-title">Social media</h2>
           <ul>
             @for (link of content.links('social_links'); track link.url) {<li><a [href]="link.url">{{ link.label }}</a></li>}
           </ul>
-        } @else {
-          <div class="placeholder">
-            <p><span class="placeholder-tag">Placeholder</span> Links to EMSA's social media accounts go here.</p>
-          </div>
-        }
-      </section>
+        </section>
+      }
       <section aria-labelledby="groupme-title">
         <h2 id="groupme-title">GroupMe</h2>
         <p>EMSA posts a weekly update in the club GroupMe.</p>

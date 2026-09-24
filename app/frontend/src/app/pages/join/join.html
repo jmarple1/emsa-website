@@ -17,6 +17,15 @@
         <li>A community of pre-health students</li>
         <li>Resume value for medical, nursing, PA, and EMS applications</li>
       </ul>
+      <h3 id="semester-title">A typical semester</h3>
+      <ul class="semester" aria-labelledby="semester-title">
+        <li><span class="semester-number">4</span> general body meetings</li>
+        <li><span class="semester-number">3</span> CPR classes</li>
+        <li><span class="semester-number">1</span> Narcan distribution night</li>
+        <li><span class="semester-number">1</span> K–6 Outreach event</li>
+      </ul>
+      <p>Want more? Join the Outreach Team.</p>
+      <p><strong>EMTs:</strong> you'll help teach and staff classes and events. EMSA is not a first response unit, but it aspires to build one at Miami, and EMTs who want to help shape that effort are especially welcome.</p>
     </div>
     <div>
       <!-- TODO: consent. Photo A shows four identifiable students and their consent is still pending (PHOTO-DIRECTIONS).
@@ -26,36 +35,11 @@
   </div>
 </section>
 
-<div class="section section-alt">
-  <div class="wrap split">
-    <section aria-labelledby="who-title">
-      <h2 id="who-title">Who can join</h2>
-      <p>Any Miami student. There are no requirements and no dues. Pre-health students and EMTs are especially welcome.</p>
-    </section>
-    <section aria-labelledby="time-title">
-      <h2 id="time-title">Time commitment</h2>
-      <p>About 1 hour a week.</p>
-    </section>
-  </div>
-</div>
-
-<section class="section" aria-labelledby="semester-title">
-  <div class="wrap">
-    <h2 id="semester-title">A typical semester</h2>
-    <ul class="semester">
-      <li><span class="semester-number">4</span> general body meetings</li>
-      <li><span class="semester-number">3</span> CPR classes</li>
-      <li><span class="semester-number">1</span> Narcan distribution night</li>
-      <li><span class="semester-number">1</span> K–6 Outreach event</li>
-    </ul>
-    <p>Want more? Join the Outreach Team.</p>
-  </div>
-</section>
-
 <section id="interest-form" class="section section-alt" aria-labelledby="form-title">
   <div class="wrap">
     <h2 id="form-title">Interest form</h2>
-    <p class="measure">The form asks for your name, Miami email, year, major, whether you're EMT certified, and how you heard about EMSA.</p>
+    <div class="form-layout">
+    <div>
     <!-- Join interest form. Fields are exactly brief section 6. Submissions go to the join_submissions table;
          officers see them at /admin. -->
     <form id="join-form" class="form" [formGroup]="f.form" (ngSubmit)="submit()" novalidate aria-labelledby="form-title">
@@ -129,51 +113,34 @@
         }
       </div>
     </form>
-    <p class="measure"><strong>What happens next:</strong> you'll get a confirmation with the date of the next meeting and a link to the club GroupMe, an officer adds you to the GroupMe so you get the weekly update, and you're invited to the next general body meeting.</p>
-    <p><a href="https://groupme.com/join_group/117642476/zucoqhJi">Join the EMSA GroupMe</a></p>
-    <div class="notice">
-      <p><strong>Also register on Miami Central.</strong> New members should sign up on EMSA's Miami Central page too.</p>
-      <p><a href="https://miamicentral.miamioh.edu/EMSA/club_signup">Register with EMSA on Miami Central</a></p>
+    </div>
+    <aside class="form-aside" aria-label="After you sign up">
+      <h3>What happens next</h3>
+      <p>You'll get a confirmation with the next meeting and the club GroupMe link. An officer adds you to the GroupMe for the weekly update, and you're invited to the next general body meeting.</p>
+      <p><strong>Also register on Miami Central.</strong> New members should sign up on <a href="https://miamicentral.miamioh.edu/EMSA/club_signup">EMSA's Miami Central page</a> too.</p>
+      <div id="already-a-member">
+        <h3>Already a member but not active?</h3>
+        <p>Jumping back in is easy: join the GroupMe and come to the next general body meeting.</p>
+        <!-- Edited at /admin > Site content > "Next general body meeting". -->
+        @if (nextMeeting(); as meeting) {
+          <p><strong>Next meeting:</strong> {{ meeting }}</p>
+        }
+        <p><a class="btn btn-secondary" href="https://groupme.com/join_group/117642476/zucoqhJi">Join the EMSA GroupMe</a></p>
+      </div>
+    </aside>
     </div>
   </div>
 </section>
 
-<section id="already-a-member" class="section" aria-labelledby="member-title">
-  <div class="wrap">
-    <h2 id="member-title">Already a member on Miami Central but not active?</h2>
-    <p class="measure">You're already registered, so jumping back in is easy: join the GroupMe for the weekly update and come to the next general body meeting.</p>
-    <p class="btn-row"><a class="btn btn-secondary" href="https://groupme.com/join_group/117642476/zucoqhJi">Join the EMSA GroupMe</a></p>
-    <!-- Next meeting comes from site_settings.next_meeting. Until an officer sets it, the placeholder shows. -->
-    @if (nextMeeting(); as meeting) {
-      <p class="notice"><strong>Next general body meeting:</strong> {{ meeting }}</p>
-    } @else {
-      <!-- Edited at /admin > Site content > "Next general body meeting". -->
-      <div class="placeholder">
-        <p><span class="placeholder-tag">Placeholder</span> Next general body meeting: date, time, and place go here.</p>
-      </div>
-    }
-  </div>
-</section>
-
-<section class="section section-alt" aria-labelledby="emt-title">
-  <div class="wrap">
-    <h2 id="emt-title">For EMTs</h2>
-    <p class="measure">EMTs help teach and staff classes and events. EMSA is not a first response unit, but it aspires to build one at Miami, and EMTs who want to help shape that effort are especially welcome.</p>
-  </div>
-</section>
-
-<section class="section" aria-labelledby="roles-title">
-  <div class="wrap">
-    <h2 id="roles-title">Open officer roles</h2>
-    <!-- Edited at /admin > Site content > "Open officer roles": one role per line, when elections approach. -->
-    @if (content.lines('officer_roles').length) {
+<!-- Edited at /admin > Site content > "Open officer roles": one role per line, when elections approach.
+     The section only shows when roles are listed. -->
+@if (content.lines('officer_roles').length) {
+  <section class="section section-alt" aria-labelledby="roles-title">
+    <div class="wrap">
+      <h2 id="roles-title">Open officer roles</h2>
       <ul class="checklist">
         @for (role of content.lines('officer_roles'); track $index) {<li>{{ role }}</li>}
       </ul>
-    } @else {
-      <div class="placeholder">
-        <p><span class="placeholder-tag">Placeholder</span> Open officer roles are listed here, one line each, when elections approach.</p>
-      </div>
-    }
-  </div>
-</section>
+    </div>
+  </section>
+}

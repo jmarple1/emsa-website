@@ -14,10 +14,10 @@ interface ImpactState { value: number; saved: number; status: '' | 'saving' | 's
 const IMPACT_WHERE: Record<string, string> = {
   cpr_certified: 'Home, About',
   stop_the_bleed: 'Home, About, What We Do, CPR Classes',
-  narcan_kits: 'Home, About, What We Do, Naloxone',
-  test_strips: 'Home, About, What We Do, Naloxone',
-  condoms: 'What We Do, Naloxone',
-  frat_houses: 'Home, About, What We Do, Naloxone',
+  narcan_kits: 'Home, About, What We Do',
+  test_strips: 'Home, About, What We Do',
+  condoms: 'What We Do',
+  frat_houses: 'Home, About, What We Do',
   members: 'About',
 };
 

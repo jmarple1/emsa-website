@@ -3,17 +3,12 @@
     <div class="hero-text">
       <h1 id="hero-title">Hands-on training for a safer campus</h1>
       <p class="lead">EMS Alliance (EMSA) is a registered student organization at Miami University that teaches free CPR, First Aid, and Stop the Bleed classes and distributes naloxone and harm reduction supplies.</p>
-      <p class="btn-row"><a class="btn btn-primary btn-lg" routerLink="/join">Join EMSA</a></p>
-      <ul class="fast-facts">
-        <li>Open to any Miami student</li>
-        <li>No requirements</li>
-        <li>No dues</li>
-        <li>About 1 hour a week</li>
-      </ul>
+      <p class="hero-facts">Open to any Miami student · No requirements · No dues · About 1 hour a week</p>
       <p class="btn-row">
-        <a class="btn btn-secondary" routerLink="/cpr-classes" fragment="register">Sign up for a free CPR class</a>
-        <a class="btn btn-secondary" routerLink="/naloxone" fragment="request">Request naloxone</a>
+        <a class="btn btn-primary btn-lg" routerLink="/join">Join EMSA</a>
+        <a class="btn btn-secondary" routerLink="/cpr-classes" fragment="register">Take a free CPR class</a>
       </p>
+      <p class="hero-links"><a routerLink="/naloxone" fragment="request">Request free naloxone</a></p>
     </div>
     <div class="hero-media">
       <!-- TODO: consent. Photo A shows four identifiable students and their consent is still pending (PHOTO-DIRECTIONS).
@@ -34,7 +29,6 @@
       <li><span class="stat-number">{{ impact.fmt('stop_the_bleed') }}</span> <span class="stat-label">trained in Stop the Bleed</span></li>
       <li><span class="stat-number">{{ impact.fmt('narcan_kits') }}</span> <span class="stat-label">Narcan kits and {{ impact.fmt('test_strips') }} fentanyl test strips across {{ impact.fmt('frat_houses') }} fraternity houses</span></li>
     </ul>
-    <p class="recognition-line">2024–25 New Student Organization of the Year · NCEMSF member and New Group Initiative grant recipient</p>
   </div>
 </section>
 
@@ -67,9 +61,10 @@
       </li>
       <li class="tile">
         <div class="tile-media">
-          <!-- TODO: photo. Tabling or Heart Club shot (coming from Max). No children and no school names. -->
-          <div class="placeholder placeholder--media">
-            <p><span class="placeholder-tag">Placeholder</span> Photo coming: tabling or Heart Club shot</p>
+          <!-- TODO: photo. Tabling or Heart Club shot (coming from Max). No children and no school names. Until then, a text tile. -->
+          <div class="text-tile" aria-hidden="true">
+            <p class="text-tile-title">K–6 Outreach &amp; Heart Club</p>
+            <p class="text-tile-sub">Safety education in the community</p>
           </div>
         </div>
         <div class="tile-body">

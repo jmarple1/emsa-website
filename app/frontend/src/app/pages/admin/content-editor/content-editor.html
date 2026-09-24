@@ -1,7 +1,7 @@
 <div class="editor-head">
   <div>
     <h2>Site content</h2>
-    <p class="editor-sub">Text officers keep up to date. Leave a box empty to show the page's placeholder instead. Plain text only; links and emails are checked before saving. The footer disclaimers and the rest of the page text are fixed and can't be edited here.</p>
+    <p class="editor-sub">Text officers keep up to date. Leave a box empty and the page leaves that spot out (or shows its standard text). Plain text only; links and emails are checked before saving. The footer disclaimers and the rest of the page text are fixed and can't be edited here.</p>
   </div>
 </div>
 
@@ -30,7 +30,7 @@
                 @case ('saving') { Saving… }
                 @case ('saved') { <span class="ok">✓ Saved. Live on the site.</span> }
                 @case ('error') { <span class="field-error">{{ s.error }}</span> }
-                @default { {{ s.saved ? '' : 'Empty: the page shows its placeholder.' }} }
+                @default { {{ s.saved ? '' : 'Empty: left out of the page for now.' }} }
               }
             </span>
             <span class="block-actions">
