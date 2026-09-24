@@ -1,0 +1,91 @@
+<div class="editor-head">
+  <div>
+    <h2>Classes</h2>
+    <p class="editor-sub">Classes show on the CPR Classes page until they start. Registration stops by itself when a class is full. Times are Oxford (Eastern) time.</p>
+  </div>
+  @if (editingId() === null) {
+    <button type="button" class="btn btn-primary" (click)="add()">Add a class</button>
+  }
+</div>
+
+<p class="editor-msg" role="status" aria-live="polite">{{ message() }}</p>
+
+@if (editingId() !== null) {
+  <form class="form editor-form card-surface" (ngSubmit)="save()" novalidate>
+    <h3>{{ editingId() === 'new' ? 'New class' : 'Edit class' }}</h3>
+    <div class="editor-grid">
+      <div class="field">
+        <label for="cl-course">Course</label>
+        <select id="cl-course" name="course" [(ngModel)]="draft.course" [attr.aria-invalid]="!!errors()['course']">
+          @for (c of courses; track c) {<option [value]="c">{{ c }}</option>}
+        </select>
+        @if (errors()['course']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <div class="field">
+        <label for="cl-cap">Capacity</label>
+        <input id="cl-cap" name="capacity" type="number" min="1" max="500" [(ngModel)]="draft.capacity" [attr.aria-invalid]="!!errors()['capacity']">
+        @if (errors()['capacity']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <div class="field">
+        <label for="cl-start">Starts</label>
+        <input id="cl-start" name="starts_at" type="datetime-local" [(ngModel)]="draft.starts_at" (change)="startChanged()" [attr.aria-invalid]="!!errors()['starts_at']">
+        @if (errors()['starts_at']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <div class="field">
+        <label for="cl-end">Ends</label>
+        <input id="cl-end" name="ends_at" type="datetime-local" [(ngModel)]="draft.ends_at" [attr.aria-invalid]="!!errors()['ends_at']">
+        @if (errors()['ends_at']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <div class="field editor-span">
+        <label for="cl-loc">Location</label>
+        <input id="cl-loc" name="location" type="text" maxlength="300" placeholder="Room, building" [(ngModel)]="draft.location" [attr.aria-invalid]="!!errors()['location']">
+        @if (errors()['location']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <label class="choice editor-span">
+        <input type="checkbox" name="is_open" [(ngModel)]="draft.is_open">
+        Open for registration (untick to close it early)
+      </label>
+    </div>
+    @if (errors()['form']; as e) {<p class="form-status form-status--error">{{ e }}</p>}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save class' }}</button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+}
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (classes().length === 0) {
+  <p class="dash-empty card-surface">No classes yet. Add this semester's classes and they'll appear on the CPR Classes page.</p>
+} @else {
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr>
+        <th scope="col">Course</th><th scope="col">When</th><th scope="col">Location</th>
+        <th scope="col" class="num">Registered</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th>
+      </tr></thead>
+      <tbody>
+        @for (c of classes(); track c.id) {
+          <tr [class.is-past]="c.past">
+            <td><strong>{{ c.course }}</strong></td>
+            <td>{{ fmt(c.starts_at, c.ends_at) }}</td>
+            <td>{{ c.location }}</td>
+            <td class="num">{{ c.registered }} / {{ c.capacity }}</td>
+            <td><span class="pill" [attr.data-status]="status(c)">{{ status(c) }}</span></td>
+            <td class="row-actions">
+              @if (confirmDelete() === c.id) {
+                <span>Delete{{ c.registered ? ' it and its ' + c.registered + ' registration' + (c.registered === 1 ? '' : 's') : '' }}?</span>
+                <button type="button" class="btn btn-danger btn-sm" (click)="remove(c)">Delete</button>
+                <button type="button" class="btn btn-secondary btn-sm" (click)="confirmDelete.set(null)">Keep</button>
+              } @else {
+                <button type="button" class="btn btn-secondary btn-sm" (click)="edit(c)">Edit</button>
+                <button type="button" class="btn btn-secondary btn-sm" (click)="confirmDelete.set(c.id)">Delete</button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

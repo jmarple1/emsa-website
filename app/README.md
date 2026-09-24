@@ -53,104 +53,75 @@ The first build takes a few minutes; after that it starts in seconds. Open `http
 
 ## 2. Create an officer account
 
-There is no public sign-up page on purpose. Anyone who can run commands on the server can add an officer:
+There is no public sign-up page on purpose. Anyone who can run commands on the server can add an officer. On the live server (from a Windows PowerShell window with the server key):
 
-```bash
-cd app
-./scripts/create-officer.sh
+```powershell
+ssh -i "C:path	oTalbotKey.pem" -t ubuntu@18.189.134.211 "cd ~/emsa && ./scripts/create-officer.sh"
 ```
 
-It asks for the officer's email, name, and a password of at least 12 characters, and stores only a bcrypt hash of the password. Running it again with the same email resets that officer's password. On Windows, run it from Git Bash.
+Locally, run `./scripts/create-officer.sh` from the `app/` folder (Git Bash on Windows).
 
-**To remove an officer:**
+It asks for a **username or email** (what the officer types to sign in), their name, and a password of at least 12 characters, and stores only a bcrypt hash of the password. **Running it again with the same username resets that officer's password.**
+
+**To remove an officer** (on the server, from `~/emsa`):
 
 ```bash
-docker compose exec postgres psql -U emsa_user emsa -c "DELETE FROM officers WHERE lower(email) = lower('person@miamioh.edu');"
+docker compose exec postgres psql -U emsa_user emsa -c "DELETE FROM officers WHERE lower(email) = lower('Username');"
 ```
 
-## 3. See form submissions
+## 3. The officer dashboard
 
-Go to `/admin` (for example http://localhost:8088/admin) and sign in. You'll see four lists (join forms, class registrations, group class requests, naloxone requests), newest first. **Download CSV** opens the list in Google Sheets or Excel. Sign-ins last 2 hours.
+Go to **https://emsamu.site/admin** (locally: `http://localhost:HTTP_PORT/admin`) and sign in. Sign-ins last 2 hours. The dashboard has five tabs:
+
+| Tab | What officers do there |
+|---|---|
+| **Overview** | Headline numbers and charts for the last 30 days, 90 days, or all time: join sign-ups per week, sign-ups by year (and how many are EMTs), how full each upcoming class is, and naloxone requests by item. Every chart has **Show as table**. |
+| **Classes** | Add, edit, close, or delete classes. They appear on the CPR Classes page right away; registration stops by itself when a class is full. Times are Oxford (Eastern) time. Deleting a class also deletes its registrations (the page asks first). |
+| **Events** | Add, edit, or delete events (meetings, the distribution night, outreach). Upcoming ones show on the Events page. |
+| **Site content** | The next meeting, open officer roles, contact email, social media links, what's in a naloxone kit, the Heart Club description, the AED map link, the Ohio-requirements FAQ answer, and the web officer on About, plus the seven **impact numbers** (one change updates every page). Empty boxes show the page's original placeholder. |
+| **Submissions** | Join forms, class registrations, group class requests, and naloxone requests, newest first, with search and **Download CSV**. Mark naloxone requests **fulfilled** once handed over; they're deleted automatically 30 days later. |
+
+What officers **can't** change from the dashboard, on purpose: the footer disclaimers (AHA, Miami independence line, 911 line), the recognition strip, and the rest of the fact-checked page text. Those need a code change (`frontend/src/app/pages/`). Editable text is plain text only; links must start with `https://`.
 
 Naloxone requests are private (brief §11). Don't copy them anywhere else.
 
 ---
 
-## 4. Update classes, events, the next meeting, and impact numbers
+## 4. The live site (how it's set up)
 
-Phase 2 will add buttons for these in the officer page. Until then, each change is a single command. Run it from the `app/` folder while the site is running. Times are Oxford, Ohio time (`-04` during daylight saving time, `-05` in winter).
+**https://emsamu.site** runs on the same AWS EC2 server as KnottSoDirtyCo (`18.189.134.211`, an Elastic IP, Ubuntu, t3.micro, 20 GB disk, 1 GB swap). DNS is at Namecheap: A records for `@` and `www` point to that IP.
 
-**Add a class** (course must be exactly `BLS`, `Heartsaver`, or `Stop the Bleed`):
+| Piece | Where |
+|---|---|
+| EMSA's containers (postgres, backend, frontend) | `~/emsa` on the server, started with `docker-compose.yml` + `docker-compose.prod.yml` |
+| Secrets (DB password, JWT secret) | `~/emsa/.env` on the server only (generated there, never in Git) |
+| HTTPS for **both** sites | KnottSoDirty's nginx container (`~/talbot/nginx-https.conf`) holds ports 80/443. The `emsamu.site` blocks in it come from `deploy/emsamu.site.conf`; it reaches EMSA over the shared `edge` Docker network |
+| Certificates | Let's Encrypt via certbot on the server; renews automatically. Hooks in `/etc/letsencrypt/renewal-hooks/` stop and restart KnottSoDirty's web container for the ~10 seconds renewal needs |
 
-```bash
-docker compose exec postgres psql -U emsa_user emsa -c "INSERT INTO classes (course, starts_at, ends_at, location, capacity) VALUES ('BLS', '2026-10-04 13:00-04', '2026-10-04 16:00-04', 'Room name, Building', 12);"
-```
-
-It appears on the CPR Classes page right away, and registration stops by itself when it's full. **Close a class early:** `UPDATE classes SET is_open = false WHERE id = 3;`
-
-**Add an event:**
-
-```bash
-docker compose exec postgres psql -U emsa_user emsa -c "INSERT INTO events (title, starts_at, ends_at, location, description) VALUES ('General body meeting', '2026-10-01 19:00-04', '2026-10-01 20:00-04', 'Room, Building', NULL);"
-```
-
-**Set the next meeting** (shown on the Join page and in the join confirmation):
+**Deploying an update.** The server is too small (1 GB) to build the Angular app, so build on a PC and copy the images:
 
 ```bash
-docker compose exec postgres psql -U emsa_user emsa -c "INSERT INTO site_settings (key, value) VALUES ('next_meeting', 'Wednesday, October 1, 7:00 PM, Room, Building') ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;"
+cd app
+docker compose build                     # builds emsa-backend and emsa-frontend
+docker save emsa-backend:latest emsa-frontend:latest | gzip -1 |   ssh -i TalbotKey.pem ubuntu@18.189.134.211 'gunzip | docker load'
+scp -i TalbotKey.pem docker-compose.yml docker-compose.prod.yml ubuntu@18.189.134.211:emsa/
+scp -i TalbotKey.pem -r database scripts deploy ubuntu@18.189.134.211:emsa/
+ssh -i TalbotKey.pem ubuntu@18.189.134.211   'cd ~/emsa && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d && docker image prune -f'
 ```
 
-**Update an impact number.** One change updates Home, About, What We Do, Naloxone, and CPR Classes together. Keys: `cpr_certified`, `stop_the_bleed`, `narcan_kits`, `test_strips`, `condoms`, `frat_houses`, `members`.
+Schema changes in `database/schema.sql` apply automatically when the backend restarts (every statement is `IF NOT EXISTS`).
 
-```bash
-docker compose exec postgres psql -U emsa_user emsa -c "UPDATE impact_stats SET value = 85 WHERE key = 'cpr_certified';"
-```
-
-**Mark a naloxone request fulfilled** (it's then deleted automatically after 30 days):
-
-```bash
-docker compose exec postgres psql -U emsa_user emsa -c "UPDATE naloxone_requests SET fulfilled = true WHERE id = 7;"
-```
-
----
-
-## 5. Put it on the internet (AWS EC2)
-
-Use an **EMSA-owned AWS account** created with the EMSA entity email, never a personal account (CLAUDE.md).
-
-1. **Launch a server.** EC2 → Launch instance → Ubuntu 24.04, `t3.small`, 20 GB disk. Security group: SSH (22) from your IP only, HTTP (80) and HTTPS (443) from anywhere.
-2. **Point the domain** (no "Miami" in the name) at the server's Elastic IP with an A record.
-3. **Install Docker and Caddy** (Caddy handles HTTPS certificates automatically):
-   ```bash
-   sudo apt update && sudo apt install -y docker.io docker-compose-v2 caddy git
-   sudo usermod -aG docker ubuntu && newgrp docker
-   ```
-4. **Get the code and configure it:**
-   ```bash
-   git clone https://github.com/jmarple1/emsa-website.git && cd emsa-website && git switch fullstack && cd app
-   cp .env.example .env && nano .env      # set passwords and JWT_SECRET; set HTTP_PORT=8080
-   docker compose up --build -d
-   ```
-5. **Turn on HTTPS.** Put this in `/etc/caddy/Caddyfile` (use your domain), then run `sudo systemctl reload caddy`:
-   ```
-   emsa-example.org {
-       reverse_proxy localhost:8080
-   }
-   ```
-   Don't add a `log` line to the Caddyfile. Access logs would record the IP address of people who request naloxone, which brief §11 rules out.
-6. **Create the first officer account** (section 2) and test a form.
-
-The containers restart on their own after a reboot (`restart: unless-stopped`).
-
-**Updating the live site later:** `cd ~/emsa-website && git pull && cd app && docker compose up --build -d`
+**If KnottSoDirty is redeployed** from its own repo, keep the `edge` network on its frontend service and the `emsamu.site` blocks in `nginx-https.conf`, or emsamu.site goes down. Backups of both files are in `~/backups/` on the server.
 
 **Backups** (do this before any big change, and on a schedule):
 
 ```bash
-docker compose exec postgres pg_dump -U emsa_user emsa > emsa-backup-$(date +%F).sql
+ssh -i TalbotKey.pem ubuntu@18.189.134.211 'cd ~/emsa && docker compose exec -T postgres pg_dump -U emsa_user emsa' > emsa-backup-$(date +%F).sql
 ```
 
 Keep backups in the EMSA Google Drive, not on a personal laptop. They contain submissions.
+
+**Moving to an EMSA-owned AWS account later** (CLAUDE.md asks for this): launch Ubuntu with Docker, copy `~/emsa` and a database backup over, restore it with `psql`, put a small HTTPS proxy in front (Caddy works: `emsamu.site { reverse_proxy localhost:8088 }`, with no `log` line so naloxone requesters' IPs are never written), set `HTTP_PORT=8088` in `.env`, drop `docker-compose.prod.yml`'s `edge` network, and point Namecheap at the new IP.
 
 ---
 
@@ -169,6 +140,7 @@ Keep backups in the EMSA Google Drive, not on a personal laptop. They contain su
 | Backend keeps restarting | Usually a wrong `DB_PASSWORD` after changing it. The password is fixed when the database is first created, so change it back or reset with `docker compose down -v` (erases data) |
 | "Port is already allocated" | Another program uses `HTTP_PORT`; pick another in `.env` |
 | Officer login says "Too many requests" | 5 tries per minute; wait a minute |
+| Dashboard says "Your session ended" | Sign-ins last 2 hours; sign in again |
 
 ## For developers
 

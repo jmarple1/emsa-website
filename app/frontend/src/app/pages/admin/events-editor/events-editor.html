@@ -1,0 +1,84 @@
+<div class="editor-head">
+  <div>
+    <h2>Events</h2>
+    <p class="editor-sub">Upcoming events show on the Events page: meetings, the distribution night, outreach events. Add classes in the Classes tab. Times are Oxford (Eastern) time.</p>
+  </div>
+  @if (editingId() === null) {
+    <button type="button" class="btn btn-primary" (click)="add()">Add an event</button>
+  }
+</div>
+
+<p class="editor-msg" role="status" aria-live="polite">{{ message() }}</p>
+
+@if (editingId() !== null) {
+  <form class="form editor-form card-surface" (ngSubmit)="save()" novalidate>
+    <h3>{{ editingId() === 'new' ? 'New event' : 'Edit event' }}</h3>
+    <div class="editor-grid">
+      <div class="field editor-span">
+        <label for="ev-title">Title</label>
+        <input id="ev-title" name="title" type="text" maxlength="200" placeholder="General body meeting" [(ngModel)]="draft.title" [attr.aria-invalid]="!!errors()['title']">
+        @if (errors()['title']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <div class="field">
+        <label for="ev-start">Starts</label>
+        <input id="ev-start" name="starts_at" type="datetime-local" [(ngModel)]="draft.starts_at" [attr.aria-invalid]="!!errors()['starts_at']">
+        @if (errors()['starts_at']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <div class="field">
+        <label for="ev-end">Ends (optional)</label>
+        <input id="ev-end" name="ends_at" type="datetime-local" [(ngModel)]="draft.ends_at" [attr.aria-invalid]="!!errors()['ends_at']">
+        @if (errors()['ends_at']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <div class="field editor-span">
+        <label for="ev-loc">Location (optional)</label>
+        <input id="ev-loc" name="location" type="text" maxlength="300" [(ngModel)]="draft.location" [attr.aria-invalid]="!!errors()['location']">
+        @if (errors()['location']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+      <div class="field editor-span">
+        <label for="ev-desc">Description (optional)</label>
+        <textarea id="ev-desc" name="description" maxlength="2000" rows="3" [(ngModel)]="draft.description" [attr.aria-invalid]="!!errors()['description']"></textarea>
+        @if (errors()['description']; as e) {<p class="field-error">{{ e }}</p>}
+      </div>
+    </div>
+    @if (errors()['form']; as e) {<p class="form-status form-status--error">{{ e }}</p>}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save event' }}</button>
+      <button type="button" class="btn btn-secondary" (click)="editingId.set(null)">Cancel</button>
+    </div>
+  </form>
+}
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (events().length === 0) {
+  <p class="dash-empty card-surface">No events yet.</p>
+} @else {
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr>
+        <th scope="col">Event</th><th scope="col">When</th><th scope="col">Location</th><th scope="col">Status</th>
+        <th scope="col"><span class="visually-hidden">Actions</span></th>
+      </tr></thead>
+      <tbody>
+        @for (e of events(); track e.id) {
+          <tr [class.is-past]="e.past">
+            <td><strong>{{ e.title }}</strong></td>
+            <td>{{ fmt(e.starts_at, e.ends_at) }}</td>
+            <td>{{ e.location ?? '' }}</td>
+            <td><span class="pill" [attr.data-status]="e.past ? 'Past' : 'Open'">{{ e.past ? 'Past' : 'Upcoming' }}</span></td>
+            <td class="row-actions">
+              @if (confirmDelete() === e.id) {
+                <span>Delete this event?</span>
+                <button type="button" class="btn btn-danger btn-sm" (click)="remove(e)">Delete</button>
+                <button type="button" class="btn btn-secondary btn-sm" (click)="confirmDelete.set(null)">Keep</button>
+              } @else {
+                <button type="button" class="btn btn-secondary btn-sm" (click)="edit(e)">Edit</button>
+                <button type="button" class="btn btn-secondary btn-sm" (click)="confirmDelete.set(e.id)">Delete</button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

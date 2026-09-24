@@ -1,0 +1,667 @@
+/* ==========================================================================
+   Officer dashboard (/admin only; loaded with the admin chunk).
+   Uses the site's design tokens from styles.css. Chart specs follow the
+   dataviz method: one validated series color (#2a78d6, 4.4:1 on white),
+   thin marks, solid hairline grid, text in ink colors (never the series
+   color), and a table view for every chart.
+   ========================================================================== */
+
+.admin {
+  --series-1: #2a78d6;
+  --series-1-hover: #256abf;
+  --meter-track: #cde2fb;
+  --good-ink: #006300;
+  --bad-ink: var(--red-600);
+  background: var(--mist);
+  min-height: 70vh;
+  padding-bottom: var(--space-xl);
+}
+
+.admin .card-surface {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+/* Sign-in ------------------------------------------------------------------ */
+.admin-signin {
+  display: grid;
+  place-items: start center;
+  padding: var(--space-xl) var(--gutter);
+}
+
+.signin-card {
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--space-lg) var(--space-md);
+  box-shadow: 0 1px 2px rgb(11 42 69 / 0.06), 0 8px 24px rgb(11 42 69 / 0.06);
+}
+
+.signin-card h1 {
+  margin-bottom: var(--space-sm);
+  font-size: var(--text-2xl);
+}
+
+.signin-card form {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.signin-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 var(--space-md);
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.signin-btn {
+  width: 100%;
+}
+
+.signin-help {
+  margin: var(--space-md) 0 0;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+/* Header bar and tabs ------------------------------------------------------ */
+.admin-bar {
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.admin-bar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-block: var(--space-md) var(--space-sm);
+}
+
+.admin-title {
+  margin: 0;
+  font-size: var(--text-2xl);
+}
+
+.admin-who {
+  margin: 0.15rem 0 0;
+  color: var(--ink-muted);
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+}
+
+.admin-tab {
+  padding: 0.7rem 0.9rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--ink-muted);
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.admin-tab:hover {
+  color: var(--navy-900);
+}
+
+.admin-tab[aria-current="page"] {
+  border-bottom-color: var(--red-600);
+  color: var(--navy-900);
+}
+
+.admin-main {
+  padding-top: var(--space-md);
+}
+
+/* Shared controls ---------------------------------------------------------- */
+.admin .btn-sm {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.8rem;
+  font-size: var(--text-sm);
+}
+
+.admin .btn-danger {
+  background: var(--red-600);
+  color: #fff;
+}
+
+.admin .btn-danger:hover {
+  background: var(--red-700);
+}
+
+/* Disabled = neutral gray, so an unchanged "Save" never looks like an error. */
+.admin button.btn:disabled,
+.admin button.btn:disabled:hover {
+  border-color: var(--line);
+  background: var(--mist);
+  color: var(--ink-muted);
+  cursor: not-allowed;
+}
+
+.dash-link {
+  padding: 0.3rem 0.2rem;
+  border: 0;
+  background: none;
+  color: var(--blue-600);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+
+.dash-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--space-md);
+}
+
+.seg {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--navy-900);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.seg:hover {
+  border-color: var(--navy-700);
+}
+
+.seg[aria-pressed="true"] {
+  border-color: var(--navy-700);
+  background: var(--navy-700);
+  color: #fff;
+}
+
+.pill {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  background: var(--mist);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pill[data-status="Open"] { background: var(--teal-050); color: #0b4d48; }
+.pill[data-status="Full"] { background: #e3ecf6; color: var(--navy-900); }
+.pill[data-status="Closed"],
+.pill[data-status="Past"],
+.pill[data-status="Done"] { background: #eef0f2; color: var(--ink-muted); }
+
+.dash-empty {
+  margin: 0;
+  padding: var(--space-md);
+  color: var(--ink-muted);
+}
+
+.admin .data-table td.num,
+.admin .data-table th.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin .data-table tbody tr:hover {
+  background: #f7f9fb;
+}
+
+.admin .data-table tr.is-past td {
+  color: var(--ink-muted);
+}
+
+.admin .table-wrap {
+  background: var(--paper);
+}
+
+/* Stays a real table cell (display:flex on a <td> breaks its borders). */
+.admin .data-table td {
+  vertical-align: middle;
+}
+
+.row-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.row-actions > * + * {
+  margin-left: 0.4rem;
+}
+
+.ok {
+  color: var(--good-ink);
+  font-weight: 600;
+}
+
+/* Overview: KPIs ------------------------------------------------------------ */
+.dash-body {
+  transition: opacity 0.2s;
+}
+
+/* Refetch keeps the frame: previous render at reduced opacity, no skeleton. */
+.dash-body.is-loading {
+  opacity: 0.55;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.kpis > li {
+  margin: 0;
+}
+
+.kpi {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.kpi p {
+  margin: 0;
+}
+
+.kpi-label {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.kpi-value {
+  margin: 0.2rem 0 !important;
+  color: var(--navy-900);
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.kpi-delta,
+.kpi-note {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.kpi-delta.is-good { color: var(--good-ink); font-weight: 600; }
+.kpi-delta.is-bad { color: var(--bad-ink); font-weight: 600; }
+
+@media (min-width: 40em) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 64em) {
+  .kpis { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Overview: chart cards ----------------------------------------------------- */
+.dash-grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+@media (min-width: 64em) {
+  .dash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dash-card--wide { grid-column: 1 / -1; }
+}
+
+.dash-card {
+  min-width: 0;
+  padding: var(--space-md);
+}
+
+.dash-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.dash-card-head h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.dash-card-sub {
+  margin: 0.15rem 0 0;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+/* Column chart (SVG) */
+app-column-chart {
+  display: block;
+  width: 100%;
+}
+
+.viz-plot {
+  position: relative;
+}
+
+.viz-plot svg {
+  display: block;
+  overflow: visible;
+}
+
+.viz-grid { stroke: var(--line); stroke-width: 1; }
+.viz-axis { stroke: var(--line-strong); stroke-width: 1; }
+.viz-tick { fill: var(--ink-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.viz-col { fill: var(--series-1); }
+.viz-col.is-hover { fill: var(--series-1-hover); }
+.viz-hit { fill: transparent; cursor: default; outline: none; }
+.viz-hit:focus-visible { stroke: var(--focus-dark); stroke-width: 2; }
+
+.viz-tooltip {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  gap: 0.05rem;
+  min-width: 7rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  box-shadow: 0 4px 16px rgb(11 42 69 / 0.12);
+  color: var(--ink);
+  font-size: var(--text-sm);
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 10px));
+}
+
+/* Near the plot edges, anchor the tooltip so it stays inside the card. */
+.viz-tooltip.is-start { transform: translate(-12px, calc(-100% - 10px)); }
+.viz-tooltip.is-end { transform: translate(calc(-100% + 12px), calc(-100% - 10px)); }
+
+.viz-tooltip strong {
+  color: var(--navy-900);
+  font-size: 1.125rem;
+}
+
+.viz-tooltip-sub {
+  color: var(--ink-muted);
+}
+
+/* Horizontal bars (HTML) */
+.viz-bars {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.viz-bar-row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 38%) 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.2rem 0.25rem;
+  border-radius: var(--radius-sm);
+  outline-offset: 1px;
+}
+
+.viz-bar-row.is-hover {
+  background: #f4f7fb;
+}
+
+.viz-bar-label {
+  color: var(--ink);
+  font-size: var(--text-sm);
+}
+
+.viz-bar-track {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.5rem;
+  border-left: 1px solid var(--line-strong);  /* the baseline bars grow from */
+}
+
+.viz-bar {
+  display: block;
+  height: 1.25rem;
+  border-radius: 0 4px 4px 0;  /* rounded data-end, square at the baseline */
+  background: var(--series-1);
+}
+
+.viz-bar-row.is-hover .viz-bar {
+  background: var(--series-1-hover);
+}
+
+.viz-bar-value {
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.viz-bar-share {
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+
+/* Meters (class fill) */
+.meters {
+  display: grid;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.meters > li {
+  margin: 0;
+}
+
+.meter-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  margin: 0 0 0.35rem;
+  font-size: var(--text-sm);
+}
+
+.meter-head span,
+.meter-note {
+  color: var(--ink-muted);
+}
+
+.meter {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--meter-track);
+}
+
+.meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--series-1);
+}
+
+.meter-note {
+  margin: 0.3rem 0 0;
+  font-size: var(--text-sm);
+}
+
+/* Editors -------------------------------------------------------------------- */
+.editor-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.editor-head h2 {
+  margin: 0 0 0.25rem;
+  font-size: var(--text-2xl);
+}
+
+.editor-sub {
+  max-width: 46rem;
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.editor-msg {
+  min-height: 1.5rem;
+  margin: 0 0 var(--space-xs);
+  color: var(--good-ink);
+  font-weight: 600;
+}
+
+.editor-form {
+  max-width: none;
+  margin-bottom: var(--space-md);
+}
+
+.editor-form h3 {
+  margin: 0;
+}
+
+.editor-grid {
+  display: grid;
+  gap: var(--space-sm) var(--space-md);
+}
+
+@media (min-width: 48em) {
+  .editor-grid { grid-template-columns: 1fr 1fr; }
+  .editor-span { grid-column: 1 / -1; }
+}
+
+.editor-section {
+  margin-top: var(--space-lg);
+}
+
+.editor-section-title {
+  margin: var(--space-sm) 0;
+  font-size: var(--text-lg);
+}
+
+/* Content blocks */
+.block-grid {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+@media (min-width: 64em) {
+  .block-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.block {
+  display: grid;
+  gap: 0.4rem;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.block-head label {
+  color: var(--navy-900);
+  font-weight: 700;
+}
+
+.block-page {
+  font-size: var(--text-sm);
+}
+
+.block input,
+.block textarea,
+.impact-input,
+.table-tools .search {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.45rem 0.65rem;
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+.block textarea {
+  resize: vertical;
+}
+
+.block [aria-invalid="true"],
+.impact-input[aria-invalid="true"] {
+  border-color: var(--red-600);
+}
+
+.block-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 2.25rem;
+}
+
+.block-status {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.block-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.impact-input {
+  max-width: 9rem;
+}
+
+.impact-table td {
+  vertical-align: middle;
+}
+
+/* Submissions */
+.table-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: var(--space-sm);
+}
+
+.table-tools .search {
+  max-width: 20rem;
+}
+
+.table-count {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}

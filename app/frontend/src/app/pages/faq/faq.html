@@ -70,9 +70,14 @@
       <!-- TODO: content. Confirm or expand this answer before publishing. Brief section 5 poses the question without an answer,
            so the answer below uses only facts from the brief. -->
       <p>EMSA distributes naloxone through Ohio's Project DAWN program, and its fraternity-house program runs with the Butler County General Health District and Miami's Office of Student Wellness. Kits are free and may not be resold.</p>
-      <div class="placeholder">
-        <p><span class="placeholder-tag">Placeholder</span> How EMSA's distribution follows Ohio's requirements, once Max or the health district confirms the details.</p>
-      </div>
+      <!-- Edited at /admin > Site content > "FAQ: Ohio requirements". -->
+      @if (content.paragraphs('faq_ohio').length) {
+        @for (p of content.paragraphs('faq_ohio'); track $index) {<p>{{ p }}</p>}
+      } @else {
+        <div class="placeholder">
+          <p><span class="placeholder-tag">Placeholder</span> How EMSA's distribution follows Ohio's requirements, once Max or the health district confirms the details.</p>
+        </div>
+      }
 
       <h3>Does EMSA respond to emergencies?</h3>
       <p>No. EMSA is not a first response unit; in an emergency, call 911. Building a student EMT first response unit is a long-term goal. That unit is not operating and has not been approved.</p>

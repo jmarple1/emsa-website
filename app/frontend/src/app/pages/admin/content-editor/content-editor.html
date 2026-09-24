@@ -1,0 +1,75 @@
+<div class="editor-head">
+  <div>
+    <h2>Site content</h2>
+    <p class="editor-sub">Text officers keep up to date. Leave a box empty to show the page's placeholder instead. Plain text only; links and emails are checked before saving. The footer disclaimers and the rest of the page text are fixed and can't be edited here.</p>
+  </div>
+</div>
+
+<section aria-labelledby="blocks-title">
+  <h3 id="blocks-title" class="editor-section-title">Text on the pages</h3>
+  <div class="block-grid">
+    @for (b of blocks; track b.key) {
+      @if (state()[b.key]; as s) {
+        <div class="block card-surface">
+          <div class="block-head">
+            <label [for]="'blk-' + b.key">{{ b.label }}</label>
+            <a class="block-page" [routerLink]="b.page.path" [fragment]="b.page.fragment" target="_blank" rel="noopener">{{ b.page.name }} page <span class="visually-hidden">(opens in a new tab)</span></a>
+          </div>
+          <p class="field-hint" [id]="'hint-' + b.key">{{ b.hint }}</p>
+          @if (b.kind === 'text' || b.kind === 'email' || b.kind === 'url') {
+            <input [id]="'blk-' + b.key" [type]="b.kind === 'email' ? 'email' : b.kind === 'url' ? 'url' : 'text'"
+                   [ngModel]="s.value" (ngModelChange)="edit(b, $event)" [placeholder]="b.example ?? ''"
+                   [attr.aria-describedby]="'hint-' + b.key" [attr.aria-invalid]="s.status === 'error'">
+          } @else {
+            <textarea [id]="'blk-' + b.key" [rows]="b.kind === 'paragraph' ? 5 : 4" [ngModel]="s.value" (ngModelChange)="edit(b, $event)"
+                      [placeholder]="b.example ?? ''" [attr.aria-describedby]="'hint-' + b.key" [attr.aria-invalid]="s.status === 'error'"></textarea>
+          }
+          <div class="block-foot">
+            <span class="block-status" role="status">
+              @switch (s.status) {
+                @case ('saving') { Saving… }
+                @case ('saved') { <span class="ok">✓ Saved. Live on the site.</span> }
+                @case ('error') { <span class="field-error">{{ s.error }}</span> }
+                @default { {{ s.saved ? '' : 'Empty: the page shows its placeholder.' }} }
+              }
+            </span>
+            <span class="block-actions">
+              @if (s.saved) {<button type="button" class="dash-link" (click)="clearBlock(b)">Clear</button>}
+              <button type="button" class="btn btn-primary btn-sm" [disabled]="!changed(b) || s.status === 'saving'" (click)="saveBlock(b)">Save</button>
+            </span>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<section aria-labelledby="impact-title" class="editor-section">
+  <h3 id="impact-title" class="editor-section-title">Impact numbers</h3>
+  <p class="editor-sub">One number updates every page it appears on. Use the officer tracking sheet. Membership is shown as "60+ members": never claim "active" members.</p>
+  <div class="table-wrap">
+    <table class="data-table impact-table">
+      <thead><tr><th scope="col">Number</th><th scope="col">Shows on</th><th scope="col">Value</th><th scope="col"><span class="visually-hidden">Save</span></th></tr></thead>
+      <tbody>
+        @for (stat of impact(); track stat.key) {
+          @if (impactState()[stat.key]; as s) {
+            <tr>
+              <td><strong>{{ preview(stat) }}</strong></td>
+              <td>{{ where[stat.key] }}</td>
+              <td>
+                <label class="visually-hidden" [for]="'imp-' + stat.key">{{ stat.label }}</label>
+                <input class="impact-input" [id]="'imp-' + stat.key" type="number" min="0" step="1"
+                       [ngModel]="s.value" (ngModelChange)="editImpact(stat.key, $event)" [attr.aria-invalid]="s.status === 'error'">
+                @if (s.status === 'error') {<p class="field-error">{{ s.error }}</p>}
+              </td>
+              <td class="row-actions">
+                @if (s.status === 'saved') {<span class="ok">✓ Saved</span>}
+                <button type="button" class="btn btn-primary btn-sm" [disabled]="!impactChanged(stat.key) || s.status === 'saving'" (click)="saveImpact(stat.key)">Save</button>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

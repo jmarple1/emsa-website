@@ -12,16 +12,25 @@ export class AuthService {
 
   readonly token = computed(() => this.session()?.token ?? null);
   readonly name = computed(() => this.session()?.name ?? '');
+  /** True when the server rejected the token (shown on the sign-in form). */
+  readonly expired = signal(false);
 
   signIn(token: string, name: string, email: string): void {
     const s = { token, name, email, expires: Date.now() + 2 * 60 * 60 * 1000 };
     sessionStorage.setItem(KEY, JSON.stringify(s));
     this.session.set(s);
+    this.expired.set(false);
   }
 
   signOut(): void {
     sessionStorage.removeItem(KEY);
     this.session.set(null);
+  }
+
+  expire(): void {
+    if (!this.session()) return;
+    this.signOut();
+    this.expired.set(true);
   }
 
   private restore(): Session | null {

@@ -60,7 +60,11 @@ void AdminController::naloxone(const drogon::HttpRequestPtr& req, Callback&& cb)
     table(req,
           "SELECT id, " LOCAL_TIME("created_at") " AS submitted,"
           " CASE requesting_for WHEN 'self' THEN 'Myself' ELSE 'Chapter house' END AS requesting_for,"
-          " chapter_house, array_to_string(items, ', ') AS items,"
+          " chapter_house,"
+          " array_to_string(ARRAY(SELECT CASE i WHEN 'naloxone' THEN 'Naloxone'"
+          "   WHEN 'test_strips' THEN 'Fentanyl test strips' WHEN 'condoms' THEN 'Condoms'"
+          "   WHEN 'educational_materials' THEN 'Educational materials' ELSE i END"
+          "   FROM unnest(items) AS i), ', ') AS items,"
           " CASE pickup WHEN 'distribution_night' THEN 'Distribution night' ELSE 'Arranged' END AS pickup,"
           " contact_method, CASE WHEN fulfilled THEN 'Yes' ELSE 'No' END AS fulfilled"
           " FROM naloxone_requests ORDER BY created_at DESC",

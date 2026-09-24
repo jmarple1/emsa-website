@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { FormState } from '../../core/form-state';
 import { ImpactService } from '../../core/impact.service';
+import { ContentService } from '../../core/content.service';
 
 const nonEmpty = (c: AbstractControl): ValidationErrors | null =>
   Array.isArray(c.value) && c.value.length ? null : { required: true };
@@ -16,6 +17,7 @@ const nonEmpty = (c: AbstractControl): ValidationErrors | null =>
 export class Naloxone {
   private readonly api = inject(ApiService);
   protected readonly impact = inject(ImpactService);
+  protected readonly content = inject(ContentService);
 
   // Supplies named on this page. Values must match ITEMS in NaloxoneController.cpp.
   readonly items = [
@@ -45,6 +47,7 @@ export class Naloxone {
 
   constructor() {
     this.impact.load();
+    this.content.load();
     const form = this.f.form;
     // Chapter house and contact method are required only when they apply.
     form.get('requesting_for')!.valueChanges.subscribe((v) => this.requireIf('chapter_house', v === 'chapter_house'));

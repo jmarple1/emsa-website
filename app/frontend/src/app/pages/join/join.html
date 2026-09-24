@@ -147,7 +147,7 @@
     @if (nextMeeting(); as meeting) {
       <p class="notice"><strong>Next general body meeting:</strong> {{ meeting }}</p>
     } @else {
-      <!-- TODO: next meeting date. Set site_settings.next_meeting (date, time, place) and update it each time. -->
+      <!-- Edited at /admin > Site content > "Next general body meeting". -->
       <div class="placeholder">
         <p><span class="placeholder-tag">Placeholder</span> Next general body meeting: date, time, and place go here.</p>
       </div>
@@ -165,9 +165,15 @@
 <section class="section" aria-labelledby="roles-title">
   <div class="wrap">
     <h2 id="roles-title">Open officer roles</h2>
-    <!-- TODO: officer roles. When elections approach, list each open role here in one line (brief section 5). -->
-    <div class="placeholder">
-      <p><span class="placeholder-tag">Placeholder</span> Open officer roles are listed here, one line each, when elections approach.</p>
-    </div>
+    <!-- Edited at /admin > Site content > "Open officer roles": one role per line, when elections approach. -->
+    @if (content.lines('officer_roles').length) {
+      <ul class="checklist">
+        @for (role of content.lines('officer_roles'); track $index) {<li>{{ role }}</li>}
+      </ul>
+    } @else {
+      <div class="placeholder">
+        <p><span class="placeholder-tag">Placeholder</span> Open officer roles are listed here, one line each, when elections approach.</p>
+      </div>
+    }
   </div>
 </section>

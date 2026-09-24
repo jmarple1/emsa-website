@@ -20,9 +20,9 @@ export class ImpactService {
   private readonly stats = signal(FALLBACK);
   private loaded = false;
 
-  /** Starts loading once; call from any page that shows numbers. */
-  load(): void {
-    if (this.loaded) return;
+  /** Starts loading once; call from any page that shows numbers. `force` reloads (after an officer edit). */
+  load(force = false): void {
+    if (this.loaded && !force) return;
     this.loaded = true;
     this.api.impact().subscribe({
       next: (rows) => {

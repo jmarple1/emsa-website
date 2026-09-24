@@ -60,11 +60,14 @@
         <li>Make sure no one is touching the person while the AED checks the heart rhythm or delivers a shock.</li>
         <li>After a shock, or if no shock is advised, start CPR again right away and keep following the prompts.</li>
       </ol>
-      <!-- TODO: verify. Find out whether Miami publishes an AED map (brief section 5 marks this VERIFY). If it does, replace this
-           placeholder with a link to Miami's AED locations (descriptive link text, no "click here"); if not, delete it. -->
-      <div class="placeholder">
-        <p><span class="placeholder-tag">Placeholder</span> A link to Miami's AED locations goes here, once someone confirms that Miami publishes an AED map.</p>
-      </div>
+      <!-- Edited at /admin > Site content > "AED map link". Leave it empty if Miami doesn't publish one. -->
+      @if (content.url('aed_map_url'); as aed) {
+        <p><a [href]="aed">Miami's AED locations</a></p>
+      } @else {
+        <div class="placeholder">
+          <p><span class="placeholder-tag">Placeholder</span> A link to Miami's AED locations goes here, once someone confirms that Miami publishes an AED map.</p>
+        </div>
+      }
     </div>
   </div>
 </section>

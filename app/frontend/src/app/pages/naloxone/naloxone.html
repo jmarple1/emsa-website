@@ -23,10 +23,16 @@
     <div>
       <h2 id="kit-title">What's in a kit</h2>
       <p>Each Narcan kit contains Narcan, a naloxone nasal spray.</p>
-      <!-- TODO: content. Confirm exactly what goes in each kit; brief section 5 asks for "what's in a Narcan kit" but gives no list. -->
-      <div class="placeholder">
-        <p><span class="placeholder-tag">Placeholder</span> The full list of what's in each kit goes here once Max confirms it.</p>
-      </div>
+      <!-- Edited at /admin > Site content > "What's in a kit". -->
+      @if (content.lines('kit_contents').length) {
+        <ul>
+          @for (item of content.lines('kit_contents'); track $index) {<li>{{ item }}</li>}
+        </ul>
+      } @else {
+        <div class="placeholder">
+          <p><span class="placeholder-tag">Placeholder</span> The full list of what's in each kit goes here once Max confirms it.</p>
+        </div>
+      }
       <p><strong>Kits are free and may not be resold.</strong></p>
     </div>
     <div>

@@ -37,6 +37,7 @@ set(SOURCES
     src/controllers/NaloxoneController.cpp
     src/controllers/AuthController.cpp
     src/controllers/AdminController.cpp
+    src/controllers/EditController.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

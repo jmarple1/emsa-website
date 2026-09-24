@@ -1,29 +1,40 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AdminTable, ApiService } from '../../core/api.service';
+import { Meta } from '@angular/platform-browser';
+import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
+import { ClassesEditor } from './classes-editor/classes-editor';
+import { ContentEditor } from './content-editor/content-editor';
+import { EventsEditor } from './events-editor/events-editor';
+import { Overview } from './overview/overview';
+import { Submissions } from './submissions/submissions';
 
-// Officer area (phase 1: read-only). Sign in, view each form's submissions,
-// and download them as CSV for Google Sheets or Excel.
+type Tab = 'overview' | 'classes' | 'events' | 'content' | 'submissions';
+
+// Officer dashboard: sign-in, then Overview (charts), editors for classes,
+// events, and site content, and the form submissions.
 @Component({
   selector: 'app-admin',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Overview, ClassesEditor, EventsEditor, ContentEditor, Submissions],
   templateUrl: './admin.html',
+  styleUrl: './admin.css',
+  // Admin-only styles, loaded with this lazy chunk and scoped under .admin.
+  encapsulation: ViewEncapsulation.None,
 })
-export class Admin {
+export class Admin implements OnDestroy {
   private readonly api = inject(ApiService);
+  private readonly meta = inject(Meta);
   protected readonly auth = inject(AuthService);
 
-  readonly tabs = [
-    { key: 'join', label: 'Join interest forms' },
-    { key: 'registrations', label: 'Class registrations' },
-    { key: 'group-requests', label: 'Group class requests' },
-    { key: 'naloxone', label: 'Naloxone requests' },
+  readonly tabs: { key: Tab; label: string }[] = [
+    { key: 'overview', label: 'Overview' },
+    { key: 'classes', label: 'Classes' },
+    { key: 'events', label: 'Events' },
+    { key: 'content', label: 'Site content' },
+    { key: 'submissions', label: 'Submissions' },
   ];
-  readonly current = signal('join');
-  readonly table = signal<AdminTable | null>(null);
-  readonly loadError = signal('');
+  readonly tab = signal<Tab>('overview');
   readonly loginError = signal('');
   readonly signingIn = signal(false);
 
@@ -34,7 +45,11 @@ export class Admin {
   });
 
   constructor() {
-    if (this.auth.token()) this.show('join');
+    this.meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
+  }
+
+  ngOnDestroy(): void {
+    this.meta.removeTag('name="robots"');
   }
 
   signIn(): void {
@@ -50,7 +65,7 @@ export class Admin {
         this.signingIn.set(false);
         this.auth.signIn(r.token, r.name, r.email);
         this.login.reset();
-        this.show('join');
+        this.tab.set('overview');
       },
       error: (e: HttpErrorResponse) => {
         this.signingIn.set(false);
@@ -63,44 +78,5 @@ export class Admin {
 
   signOut(): void {
     this.auth.signOut();
-    this.table.set(null);
-  }
-
-  show(key: string): void {
-    this.current.set(key);
-    this.table.set(null);
-    this.loadError.set('');
-    this.api.adminTable(key).subscribe({
-      next: (t) => this.table.set(t),
-      error: (e: HttpErrorResponse) => this.handleError(e),
-    });
-  }
-
-  download(): void {
-    const key = this.current();
-    this.api.adminCsv(key).subscribe({
-      next: (blob) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `emsa-${key}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-      },
-      error: (e: HttpErrorResponse) => this.handleError(e),
-    });
-  }
-
-  label(column: string): string {
-    return column.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
-  }
-
-  private handleError(e: HttpErrorResponse): void {
-    if (e.status === 401) {
-      this.auth.signOut();
-      this.loginError.set('Your session expired. Please sign in again.');
-      return;
-    }
-    this.loadError.set("Couldn't load this list. Please try again.");
   }
 }

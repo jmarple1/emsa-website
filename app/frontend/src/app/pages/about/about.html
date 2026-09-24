@@ -51,11 +51,14 @@
       </li>
     </ul>
     <p>Additional officers will be listed after elections.</p>
-    <!-- TODO: officer role. Brief section 7 asks for a named officer role that owns the website, social media, and the weekly
-         update (Georgetown's squad calls theirs "Director of Electronic Systems"). Add the role title and name here. -->
-    <div class="placeholder">
-      <p><span class="placeholder-tag">Placeholder</span> Website, social media, and weekly update: the officer role and name that own them go here.</p>
-    </div>
+    <!-- Edited at /admin > Site content > "Web and social media officer" (brief section 7). -->
+    @if (content.get('web_officer'); as officer) {
+      <p><strong>Website, social media, and weekly update:</strong> {{ officer }}</p>
+    } @else {
+      <div class="placeholder">
+        <p><span class="placeholder-tag">Placeholder</span> Website, social media, and weekly update: the officer role and name that own them go here.</p>
+      </div>
+    }
   </div>
 </section>
 

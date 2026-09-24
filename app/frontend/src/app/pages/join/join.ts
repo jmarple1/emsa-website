@@ -1,8 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { FormState } from '../../core/form-state';
+import { ContentService } from '../../core/content.service';
 
 const MIAMI_EMAIL = /^[A-Za-z0-9._%+\-]+@miamioh\.edu$/i;
 
@@ -16,7 +17,8 @@ export class Join {
 
   // Must match YEARS in backend/src/controllers/JoinController.cpp.
   readonly years = ['First-year', 'Sophomore', 'Junior', 'Senior', 'Graduate student', 'Other'];
-  readonly nextMeeting = signal<string | null>(null);
+  protected readonly content = inject(ContentService);
+  readonly nextMeeting = computed(() => this.content.get('next_meeting'));
 
   readonly f = new FormState(
     inject(FormBuilder).nonNullable.group({
@@ -39,10 +41,7 @@ export class Join {
   );
 
   constructor() {
-    this.api.nextMeeting().subscribe({
-      next: (r) => this.nextMeeting.set(r.next_meeting),
-      error: () => this.nextMeeting.set(null),
-    });
+    this.content.load();
   }
 
   submit(): void {

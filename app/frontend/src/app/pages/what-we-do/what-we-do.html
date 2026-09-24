@@ -104,10 +104,14 @@
         <article class="program">
           <h3>AHA Heart Club</h3>
           <p>EMSA runs an American Heart Association Heart Club as one of its programs.</p>
-          <!-- TODO: content. Add what the Heart Club does and who it's for; the brief gives no detail on either. -->
-          <div class="placeholder">
-            <p><span class="placeholder-tag">Placeholder</span> What the Heart Club does and who it's for.</p>
-          </div>
+          <!-- Edited at /admin > Site content > "Heart Club". -->
+          @if (content.paragraphs('heart_club').length) {
+            @for (p of content.paragraphs('heart_club'); track $index) {<p>{{ p }}</p>}
+          } @else {
+            <div class="placeholder">
+              <p><span class="placeholder-tag">Placeholder</span> What the Heart Club does and who it's for.</p>
+            </div>
+          }
           <p class="program-actions"><a class="btn btn-secondary" routerLink="/join">Get involved with the Heart Club</a></p>
         </article>
       </div>

@@ -10,6 +10,7 @@ public:
     ADD_METHOD_TO(PublicController::classes,     "/api/classes",               drogon::Get);
     ADD_METHOD_TO(PublicController::events,      "/api/events",                drogon::Get);
     ADD_METHOD_TO(PublicController::nextMeeting, "/api/settings/next-meeting", drogon::Get);
+    ADD_METHOD_TO(PublicController::content,     "/api/content",               drogon::Get);
     METHOD_LIST_END
 
     using Callback = std::function<void(const drogon::HttpResponsePtr&)>;
@@ -19,4 +20,5 @@ public:
     void classes(const drogon::HttpRequestPtr&, Callback&&);
     void events(const drogon::HttpRequestPtr&, Callback&&);
     void nextMeeting(const drogon::HttpRequestPtr&, Callback&&);
+    void content(const drogon::HttpRequestPtr&, Callback&&);
 };

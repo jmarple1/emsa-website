@@ -13,18 +13,27 @@
     <div class="split">
       <section aria-labelledby="email-title">
         <h2 id="email-title">Email</h2>
-        <!-- TODO: entity email. Add the EMSA entity email address here as a mailto: link. Never a personal address. -->
-        <div class="placeholder">
-          <p><span class="placeholder-tag">Placeholder</span> EMSA's email address goes here.</p>
-        </div>
+        <!-- Edited at /admin > Site content > "Contact email". The EMSA entity email only, never a personal address. -->
+        @if (content.get('contact_email'); as email) {
+          <p><a [href]="'mailto:' + email">{{ email }}</a></p>
+        } @else {
+          <div class="placeholder">
+            <p><span class="placeholder-tag">Placeholder</span> EMSA's email address goes here.</p>
+          </div>
+        }
       </section>
       <section aria-labelledby="social-title">
         <h2 id="social-title">Social media</h2>
-        <!-- TODO: social handles. Add links to EMSA's social media accounts (brief section 10 lists the handles as pending).
-             Name each link after the platform, for example "EMSA on Instagram". -->
-        <div class="placeholder">
-          <p><span class="placeholder-tag">Placeholder</span> Links to EMSA's social media accounts go here.</p>
-        </div>
+        <!-- Edited at /admin > Site content > "Social media links". Name each link after the platform, e.g. "EMSA on Instagram". -->
+        @if (content.links('social_links').length) {
+          <ul>
+            @for (link of content.links('social_links'); track link.url) {<li><a [href]="link.url">{{ link.label }}</a></li>}
+          </ul>
+        } @else {
+          <div class="placeholder">
+            <p><span class="placeholder-tag">Placeholder</span> Links to EMSA's social media accounts go here.</p>
+          </div>
+        }
       </section>
       <section aria-labelledby="groupme-title">
         <h2 id="groupme-title">GroupMe</h2>

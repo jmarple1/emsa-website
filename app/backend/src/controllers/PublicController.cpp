@@ -65,6 +65,22 @@ void PublicController::events(const drogon::HttpRequestPtr&, Callback&& cb) {
         cb);
 }
 
+// GET /api/content — every officer-edited text block, {key: value}. Only
+// keys listed in utils/ContentBlocks.h can be written, so this is public-safe.
+void PublicController::content(const drogon::HttpRequestPtr&, Callback&& cb) {
+    drogon::app().getDbClient()->execSqlAsync(
+        "SELECT COALESCE(json_object_agg(key, value), '{}'::json) FROM site_settings",
+        [cb](const drogon::orm::Result& r) {
+            auto resp = drogon::HttpResponse::newHttpResponse();
+            resp->setContentTypeCode(drogon::CT_APPLICATION_JSON);
+            resp->setBody(r[0][0].as<std::string>());
+            cb(resp);
+        },
+        [cb](const drogon::orm::DrogonDbException&) {
+            cb(Http::jsonError(drogon::k500InternalServerError, "Could not load data"));
+        });
+}
+
 // GET /api/settings/next-meeting — {"next_meeting": "..."} or null
 void PublicController::nextMeeting(const drogon::HttpRequestPtr&, Callback&& cb) {
     drogon::app().getDbClient()->execSqlAsync(

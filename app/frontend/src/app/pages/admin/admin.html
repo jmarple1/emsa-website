@@ -1,68 +1,53 @@
-<div class="page-head">
-  <div class="wrap">
-    <h1>Officer area</h1>
-    <p class="lead">Form submissions for EMSA officers. This page is not linked from the public site.</p>
-  </div>
-</div>
-
-<section class="section">
-  <div class="wrap">
-    @if (!auth.token()) {
-      <h2 id="signin-title">Sign in</h2>
-      <form id="login-form" class="form" [formGroup]="login" (ngSubmit)="signIn()" novalidate aria-labelledby="signin-title">
-        <div class="field">
-          <label for="login-email">Username or email</label>
-          <input id="login-email" type="text" formControlName="email" autocomplete="username" autocapitalize="none" spellcheck="false">
-        </div>
-        <div class="field">
-          <label for="login-password">Password</label>
-          <input id="login-password" type="password" formControlName="password" autocomplete="current-password">
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" [disabled]="signingIn()">{{ signingIn() ? 'Signing in…' : 'Sign in' }}</button>
-        </div>
-        <div role="alert">
-          @if (loginError()) {<p class="form-status form-status--error">{{ loginError() }}</p>}
-        </div>
-      </form>
-      <p class="measure">Officer accounts are created by whoever runs the server (see app/README.md, "Create an officer account").</p>
-    } @else {
-      <div class="btn-row">
-        <p>Signed in as <strong>{{ auth.name() }}</strong>.</p>
-        <button type="button" class="btn btn-secondary" (click)="signOut()">Sign out</button>
-      </div>
-
-      <h2 id="lists-title" class="visually-hidden">Submissions</h2>
-      <ul class="tab-list" aria-labelledby="lists-title">
-        @for (t of tabs; track t.key) {
-          <li><button type="button" class="btn btn-secondary" [attr.aria-pressed]="current() === t.key" (click)="show(t.key)">{{ t.label }}</button></li>
+<div class="admin">
+  @if (!auth.token()) {
+    <section class="admin-signin" aria-labelledby="signin-title">
+      <div class="signin-card card-surface">
+        <p class="signin-brand"><span class="wordmark-badge">EMSA</span> Officer dashboard</p>
+        <h1 id="signin-title">Sign in</h1>
+        @if (auth.expired()) {
+          <p class="form-status" role="status">Your session ended. Please sign in again.</p>
         }
-      </ul>
-
-      @if (current() === 'naloxone') {
-        <p class="notice measure">Naloxone requests are private. Don't copy them anywhere else. Fulfilled requests are deleted automatically after 30 days.</p>
-      }
-
-      @if (loadError()) {
-        <p class="form-status form-status--error" role="alert">{{ loadError() }}</p>
-      } @else if (table(); as t) {
-        <p><strong>{{ t.rows.length }}</strong> {{ t.rows.length === 1 ? 'entry' : 'entries' }}, newest first.
-          <button type="button" class="btn btn-secondary" (click)="download()">Download CSV</button></p>
-        @if (t.rows.length) {
-          <div class="table-wrap" tabindex="0" role="region" aria-label="Submissions table">
-            <table class="data-table">
-              <thead><tr>@for (c of t.columns; track c) {<th scope="col">{{ label(c) }}</th>}</tr></thead>
-              <tbody>
-                @for (r of t.rows; track $index) {
-                  <tr>@for (c of t.columns; track c) {<td>{{ r[c] ?? '' }}</td>}</tr>
-                }
-              </tbody>
-            </table>
+        <form id="login-form" [formGroup]="login" (ngSubmit)="signIn()" novalidate>
+          <div class="field">
+            <label for="login-email">Username or email</label>
+            <input id="login-email" type="text" formControlName="email" autocomplete="username" autocapitalize="none" spellcheck="false">
           </div>
+          <div class="field">
+            <label for="login-password">Password</label>
+            <input id="login-password" type="password" formControlName="password" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary signin-btn" [disabled]="signingIn()">{{ signingIn() ? 'Signing in…' : 'Sign in' }}</button>
+          <div role="alert">
+            @if (loginError()) {<p class="form-status form-status--error">{{ loginError() }}</p>}
+          </div>
+        </form>
+        <p class="signin-help">Accounts are created by whoever runs the server (app/README.md, "Create an officer account").</p>
+      </div>
+    </section>
+  } @else {
+    <div class="admin-bar">
+      <div class="wrap admin-bar-inner">
+        <div>
+          <h1 class="admin-title">Officer dashboard</h1>
+          <p class="admin-who">Signed in as <strong>{{ auth.name() }}</strong></p>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="signOut()">Sign out</button>
+      </div>
+      <nav class="wrap admin-tabs" aria-label="Dashboard sections">
+        @for (t of tabs; track t.key) {
+          <button type="button" class="admin-tab" [attr.aria-current]="tab() === t.key ? 'page' : null" (click)="tab.set(t.key)">{{ t.label }}</button>
         }
-      } @else {
-        <p role="status">Loading…</p>
+      </nav>
+    </div>
+
+    <div class="wrap admin-main">
+      @switch (tab()) {
+        @case ('overview') { <app-admin-overview /> }
+        @case ('classes') { <app-classes-editor /> }
+        @case ('events') { <app-events-editor /> }
+        @case ('content') { <app-content-editor /> }
+        @case ('submissions') { <app-submissions /> }
       }
-    }
-  </div>
-</section>
+    </div>
+  }
+</div>

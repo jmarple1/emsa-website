@@ -46,7 +46,7 @@ export class ApiService {
   impact() { return this.http.get<ImpactStat[]>('/api/impact'); }
   classes() { return this.http.get<ClassSession[]>('/api/classes'); }
   events() { return this.http.get<EventItem[]>('/api/events'); }
-  nextMeeting() { return this.http.get<{ next_meeting: string | null }>('/api/settings/next-meeting'); }
+  content() { return this.http.get<Record<string, string>>('/api/content'); }
 
   join(body: unknown) { return this.http.post<SubmitResult>('/api/join', body); }
   registerForClass(id: number, body: unknown) { return this.http.post<SubmitResult>(`/api/classes/${id}/register`, body); }
@@ -58,4 +58,47 @@ export class ApiService {
   }
   adminTable(name: string) { return this.http.get<AdminTable>(`/api/admin/${name}`); }
   adminCsv(name: string) { return this.http.get(`/api/admin/${name}?format=csv`, { responseType: 'blob' }); }
+
+  // Officer editing. Times are Oxford local "YYYY-MM-DDTHH:MM" both ways.
+  adminContent() { return this.http.get<Record<string, string>>('/api/admin/content'); }
+  saveContent(key: string, value: string) { return this.http.put<Ok>(`/api/admin/content/${key}`, { value }); }
+  adminClasses() { return this.http.get<AdminClass[] | null>('/api/admin/classes'); }
+  createClass(c: ClassInput) { return this.http.post<Ok>('/api/admin/classes', c); }
+  updateClass(id: number, c: ClassInput) { return this.http.put<Ok>(`/api/admin/classes/${id}`, c); }
+  deleteClass(id: number) { return this.http.delete<Ok>(`/api/admin/classes/${id}`); }
+  adminEvents() { return this.http.get<AdminEvent[] | null>('/api/admin/events'); }
+  createEvent(e: EventInput) { return this.http.post<Ok>('/api/admin/events', e); }
+  updateEvent(id: number, e: EventInput) { return this.http.put<Ok>(`/api/admin/events/${id}`, e); }
+  deleteEvent(id: number) { return this.http.delete<Ok>(`/api/admin/events/${id}`); }
+  saveImpact(key: string, value: number) { return this.http.put<Ok>(`/api/admin/impact/${key}`, { value }); }
+  setFulfilled(id: number, fulfilled: boolean) { return this.http.patch<Ok>(`/api/admin/naloxone/${id}`, { fulfilled }); }
+}
+
+export interface Ok { ok: boolean }
+
+export interface ClassInput {
+  course: string;
+  starts_at: string;
+  ends_at: string;
+  location: string;
+  capacity: number;
+  is_open: boolean;
+}
+export interface AdminClass extends ClassInput { id: number; past: boolean; registered: number }
+
+export interface EventInput {
+  title: string;
+  starts_at: string;
+  ends_at: string;
+  location: string;
+  description: string;
+}
+export interface AdminEvent {
+  id: number;
+  title: string;
+  starts_at: string;
+  ends_at: string | null;
+  location: string | null;
+  description: string | null;
+  past: boolean;
 }
