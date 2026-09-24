@@ -12,7 +12,7 @@
 set -e
 cd "$(dirname "$0")/.."
 
-printf "Officer email: "; read -r EMAIL
+printf "Officer username or email (used to sign in): "; read -r EMAIL
 printf "Officer name: ";  read -r NAME
 stty -echo 2>/dev/null || true
 printf "Password (at least 12 characters): "; read -r PASSWORD; echo

@@ -28,7 +28,8 @@ export class Admin {
   readonly signingIn = signal(false);
 
   readonly login = inject(FormBuilder).nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    // Officers sign in with a username or an email (officers.email holds either).
+    email: ['', Validators.required],
     password: ['', Validators.required],
   });
 
@@ -38,7 +39,7 @@ export class Admin {
 
   signIn(): void {
     if (this.login.invalid) {
-      this.loginError.set('Enter your email and password.');
+      this.loginError.set('Enter your username and password.');
       return;
     }
     this.signingIn.set(true);
@@ -53,7 +54,9 @@ export class Admin {
       },
       error: (e: HttpErrorResponse) => {
         this.signingIn.set(false);
-        this.loginError.set(e.error?.error ?? 'Sign-in failed. Please try again.');
+        this.loginError.set(
+          e.status === 401 ? 'Wrong username or password.' : (e.error?.error ?? 'Sign-in failed. Please try again.'),
+        );
       },
     });
   }

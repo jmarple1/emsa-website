@@ -11,8 +11,8 @@
       <h2 id="signin-title">Sign in</h2>
       <form id="login-form" class="form" [formGroup]="login" (ngSubmit)="signIn()" novalidate aria-labelledby="signin-title">
         <div class="field">
-          <label for="login-email">Email</label>
-          <input id="login-email" type="email" formControlName="email" autocomplete="username">
+          <label for="login-email">Username or email</label>
+          <input id="login-email" type="text" formControlName="email" autocomplete="username" autocapitalize="none" spellcheck="false">
         </div>
         <div class="field">
           <label for="login-password">Password</label>
