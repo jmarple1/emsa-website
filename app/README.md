@@ -113,13 +113,13 @@ Schema changes in `database/schema.sql` apply automatically when the backend res
 
 **If KnottSoDirty is redeployed** from its own repo, keep the `edge` network on its frontend service and the `emsamu.site` blocks in `nginx-https.conf`, or emsamu.site goes down. Backups of both files are in `~/backups/` on the server.
 
-**Backups** (do this before any big change, and on a schedule):
+**Backups** run every night at 3:15 a.m. Oxford time (cron on the server runs `scripts/backup.sh`) for both EMSA and KnottSoDirty. They land in `~/backups/emsa/` and `~/backups/talbot/` and are kept for 14 days. Check them with `ls -lh ~/backups/emsa`. To copy the newest one off the server:
 
 ```bash
-ssh -i TalbotKey.pem ubuntu@18.189.134.211 'cd ~/emsa && docker compose exec -T postgres pg_dump -U emsa_user emsa' > emsa-backup-$(date +%F).sql
+scp -i TalbotKey.pem "ubuntu@18.189.134.211:backups/emsa/*$(date +%F).sql.gz" .
 ```
 
-Keep backups in the EMSA Google Drive, not on a personal laptop. They contain submissions.
+A backup on the same server doesn't survive losing the server, so copy one to the EMSA Google Drive now and then, and never keep them on a personal laptop, because they contain submissions. To restore: `gunzip -c emsa-DATE.sql.gz | docker exec -i emsa-postgres-1 psql -U emsa_user emsa` (into an empty database).
 
 **Moving to an EMSA-owned AWS account later** (CLAUDE.md asks for this): launch Ubuntu with Docker, copy `~/emsa` and a database backup over, restore it with `psql`, put a small HTTPS proxy in front (Caddy works: `emsamu.site { reverse_proxy localhost:8088 }`, with no `log` line so naloxone requesters' IPs are never written), set `HTTP_PORT=8088` in `.env`, drop `docker-compose.prod.yml`'s `edge` network, and point Namecheap at the new IP.
 
