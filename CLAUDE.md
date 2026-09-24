@@ -4,7 +4,7 @@ This repo is the website for EMS Alliance (EMSA), a registered student organizat
 
 ## Build rules
 
-- Stack: Angular frontend (app/frontend), C++ Drogon backend (app/backend), PostgreSQL (app/db), same architecture as KnottSoDirtyCo. Deployed to AWS EC2 under an EMSA-owned AWS account (entity email), never a personal account.
+- Stack: Angular frontend (app/frontend), C++ Drogon backend (app/backend), PostgreSQL (app/database), same architecture as KnottSoDirtyCo. Deployed to AWS EC2 under an EMSA-owned AWS account (entity email), never a personal account.
 - Forms and the calendar are served by our own API and database, not Google embeds. Collect only the fields in brief §6/§5; the naloxone form never collects a name and never stores IPs.
 - Header/footer live in shared Angular components; page copy stays verbatim from the fact-checked static pages unless the brief changes.
 - Ten pages per brief §4: Home (`/`), what-we-do, join, cpr-classes, naloxone, emergency, events, about, faq, contact.

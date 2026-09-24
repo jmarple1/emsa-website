@@ -60,17 +60,22 @@ const std::string& salt() {
 }
 } // namespace
 
+// Campus Wi-Fi puts many students behind one public IP, and a tabling QR
+// code can bring dozens of sign-ups a minute from that one address, so the
+// form limit is generous and counted separately for each form.
+constexpr int FORM_LIMIT = 30;
+
 void RateLimitFilter::doFilter(const drogon::HttpRequestPtr& req,
                                drogon::FilterCallback&& fcb,
                                drogon::FilterChainCallback&& fccb) {
-    limit("form:" + Http::clientIp(req), 10, fcb, fccb);
+    limit("form:" + req->path() + ":" + Http::clientIp(req), FORM_LIMIT, fcb, fccb);
 }
 
 void NaloxoneRateLimitFilter::doFilter(const drogon::HttpRequestPtr& req,
                                        drogon::FilterCallback&& fcb,
                                        drogon::FilterChainCallback&& fccb) {
     const auto h = std::hash<std::string>{}(salt() + Http::clientIp(req));
-    limit("nal:" + std::to_string(h), 10, fcb, fccb);
+    limit("nal:" + std::to_string(h), FORM_LIMIT, fcb, fccb);
 }
 
 void LoginRateLimitFilter::doFilter(const drogon::HttpRequestPtr& req,

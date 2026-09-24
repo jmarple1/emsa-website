@@ -8,7 +8,7 @@ namespace RateLimitState {
     bool check(const std::string& key, int maxReqs, int windowSecs);
 }
 
-// Public form endpoints: 10 requests / 60 s per IP
+// Public form endpoints: 30 requests / 60 s per IP, per form
 class RateLimitFilter : public drogon::HttpFilter<RateLimitFilter> {
 public:
     void doFilter(const drogon::HttpRequestPtr&,

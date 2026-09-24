@@ -85,6 +85,24 @@ CREATE TABLE IF NOT EXISTS naloxone_requests (
     CHECK (pickup = 'arranged' OR contact_method IS NULL)
 );
 
+-- Stamp fulfilled_at when a request is marked fulfilled (and clear it if
+-- unmarked), so the retention purge knows when to delete it.
+CREATE OR REPLACE FUNCTION naloxone_set_fulfilled_at() RETURNS trigger AS $$
+BEGIN
+    IF NEW.fulfilled AND NOT OLD.fulfilled THEN
+        NEW.fulfilled_at := NOW();
+    ELSIF NOT NEW.fulfilled THEN
+        NEW.fulfilled_at := NULL;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_naloxone_fulfilled_at ON naloxone_requests;
+CREATE TRIGGER trg_naloxone_fulfilled_at
+    BEFORE UPDATE OF fulfilled ON naloxone_requests
+    FOR EACH ROW EXECUTE FUNCTION naloxone_set_fulfilled_at();
+
 -- ----------------------------------------------------------
 -- Events calendar (replaces the Google Calendar embed; empty seed)
 -- ----------------------------------------------------------
