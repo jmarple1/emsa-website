@@ -4,6 +4,8 @@
 -- Safe to re-run: every statement uses IF NOT EXISTS.
 -- ============================================================
 
+SET client_min_messages = warning;           -- hide "already exists, skipping" on restarts
+
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";   -- crypt() / gen_salt('bf') for officer passwords
 
 -- ----------------------------------------------------------
