@@ -71,15 +71,16 @@ docker compose exec postgres psql -U emsa_user emsa -c "DELETE FROM officers WHE
 
 ## 3. The officer dashboard
 
-Go to **https://emsamu.site/admin** (locally: `http://localhost:HTTP_PORT/admin`) and sign in. Sign-ins last 2 hours. The dashboard has five tabs:
+Go to **https://emsamu.site/admin** (locally: `http://localhost:HTTP_PORT/admin`) and sign in. Sign-ins last 2 hours. The dashboard has six tabs:
 
 | Tab | What officers do there |
 |---|---|
-| **Overview** | Headline numbers and charts for the last 30 days, 90 days, or all time: join sign-ups per week, sign-ups by year (and how many are EMTs), how full each upcoming class is, and naloxone requests by item. Every chart has **Show as table**. |
+| **Overview** | Headline numbers and charts for the last 30 days, 90 days, or all time: join sign-ups per week, sign-ups by year (and how many are EMTs), how full each upcoming class is, naloxone requests by item, and page views per week and by page (counted without cookies or IP addresses; see the /privacy page). Every chart has **Show as table**. |
 | **Classes** | Add, edit, close, or delete classes. They appear on the CPR Classes page right away; registration stops by itself when a class is full. Times are Oxford (Eastern) time. Deleting a class also deletes its registrations (the page asks first). |
 | **Events** | Add, edit, or delete events (meetings, the distribution night, outreach). Upcoming ones show on the Events page. |
-| **Site content** | The next meeting, open officer roles, contact email, social media links, what's in a naloxone kit, the Heart Club description, the AED map link, the Ohio-requirements FAQ answer, and the web officer on About, plus the seven **impact numbers** (one change updates every page). Empty boxes show the page's original placeholder. |
+| **Site content** | The next meeting, open officer roles, contact email, social media links, what's in a naloxone kit, the Heart Club description, the AED map link, the Ohio-requirements FAQ answer, the web officer and the **Leadership** list on About (one "Name | Role" per line; update after elections), plus the seven **impact numbers** (one change updates every page). Empty boxes show the page's original placeholder. |
 | **Submissions** | Join forms, class registrations, group class requests, and naloxone requests, newest first, with search and **Download CSV**. Mark naloxone requests **fulfilled** once handed over; they're deleted automatically 30 days later. |
+| **Account** | Change your own password (needs your current one; at least 12 characters). New officers should do this the first time they sign in. |
 
 What officers **can't** change from the dashboard, on purpose: the footer disclaimers (AHA, Miami independence line, 911 line), the recognition strip, and the rest of the fact-checked page text. Those need a code change (`frontend/src/app/pages/`). Editable text is plain text only; links must start with `https://`.
 
@@ -112,6 +113,8 @@ ssh -i TalbotKey.pem ubuntu@18.189.134.211   'cd ~/emsa && docker compose -f doc
 Schema changes in `database/schema.sql` apply automatically when the backend restarts (every statement is `IF NOT EXISTS`).
 
 **If KnottSoDirty is redeployed** from its own repo, keep the `edge` network on its frontend service and the `emsamu.site` blocks in `nginx-https.conf`, or emsamu.site goes down. Backups of both files are in `~/backups/` on the server.
+
+**Uptime alert.** A GitHub Actions job (`.github/workflows/uptime.yml`, run from `main`) checks both sites every hour and fails if either is down or a certificate is within 14 days of expiring. GitHub emails the repo owner when it fails. GitHub pauses scheduled jobs after 60 days without a commit; re-enable it from the Actions tab if that happens.
 
 **Backups** run every night at 3:15 a.m. Oxford time (cron on the server runs `scripts/backup.sh`) for both EMSA and KnottSoDirty. They land in `~/backups/emsa/` and `~/backups/talbot/` and are kept for 14 days. Check them with `ls -lh ~/backups/emsa`. To copy the newest one off the server:
 
