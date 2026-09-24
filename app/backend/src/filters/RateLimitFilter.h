@@ -32,3 +32,12 @@ public:
                   drogon::FilterCallback&&,
                   drogon::FilterChainCallback&&) override;
 };
+
+// Page-view counter: same limit, keyed on the salted hash like the naloxone
+// form, because the privacy page promises visit counts keep no IP address.
+class PageViewRateLimitFilter : public drogon::HttpFilter<PageViewRateLimitFilter> {
+public:
+    void doFilter(const drogon::HttpRequestPtr&,
+                  drogon::FilterCallback&&,
+                  drogon::FilterChainCallback&&) override;
+};

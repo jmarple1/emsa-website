@@ -9,14 +9,15 @@ import { ContentEditor } from './content-editor/content-editor';
 import { EventsEditor } from './events-editor/events-editor';
 import { Overview } from './overview/overview';
 import { Submissions } from './submissions/submissions';
+import { Account } from './account/account';
 
-type Tab = 'overview' | 'classes' | 'events' | 'content' | 'submissions';
+type Tab = 'overview' | 'classes' | 'events' | 'content' | 'submissions' | 'account';
 
 // Officer dashboard: sign-in, then Overview (charts), editors for classes,
 // events, and site content, and the form submissions.
 @Component({
   selector: 'app-admin',
-  imports: [ReactiveFormsModule, Overview, ClassesEditor, EventsEditor, ContentEditor, Submissions],
+  imports: [ReactiveFormsModule, Overview, ClassesEditor, EventsEditor, ContentEditor, Submissions, Account],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
   // Admin-only styles, loaded with this lazy chunk and scoped under .admin.
@@ -33,6 +34,7 @@ export class Admin implements OnDestroy {
     { key: 'events', label: 'Events' },
     { key: 'content', label: 'Site content' },
     { key: 'submissions', label: 'Submissions' },
+    { key: 'account', label: 'Account' },
   ];
   readonly tab = signal<Tab>('overview');
   readonly loginError = signal('');

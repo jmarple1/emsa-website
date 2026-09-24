@@ -34,15 +34,19 @@ std::string createToken(const std::string& email) {
 }
 
 bool verifyToken(const std::string& token) {
+    return !subject(token).empty();
+}
+
+std::string subject(const std::string& token) {
     try {
         auto decoded = jwt::decode(token);
         jwt::verify()
             .allow_algorithm(jwt::algorithm::hs256{jwtSecret()})
             .with_issuer(ISSUER)
             .verify(decoded);
-        return true;
+        return decoded.get_subject();
     } catch (...) {
-        return false;
+        return "";
     }
 }
 

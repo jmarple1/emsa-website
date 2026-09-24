@@ -48,5 +48,10 @@
     "route": "/contact",
     "title": "Contact | EMS Alliance (EMSA)",
     "description": "Contact EMS Alliance: email, social media, the club GroupMe, and EMSA's Miami Central page. In an emergency, call 911."
+  },
+  "privacy": {
+    "route": "/privacy",
+    "title": "Privacy | EMS Alliance (EMSA)",
+    "description": "What EMS Alliance collects on its website forms, why, who can see it, and how long it's kept. No cookies, no trackers, and no name on naloxone requests."
   }
 }

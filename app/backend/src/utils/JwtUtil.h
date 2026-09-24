@@ -10,4 +10,7 @@ std::string createToken(const std::string& email);
 // Returns true if the token is valid, not expired, and the issuer matches.
 bool verifyToken(const std::string& token);
 
+// The officer (subject) of a valid token, or "" if the token isn't valid.
+std::string subject(const std::string& token);
+
 } // namespace JwtUtil

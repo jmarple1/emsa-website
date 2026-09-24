@@ -24,6 +24,21 @@
   <div class="wrap">
     <h2 id="leadership-title">Leadership</h2>
     <!-- Headshots: square, same background if possible (brief section 10), coming from Max. -->
+    <!-- Edited at /admin > Site content > "Leadership". Until it is set, the original list shows. -->
+    @if (content.people('leadership'); as people) {
+    @if (people.length) {
+    <ul class="people">
+      @for (p of people; track $index) {
+      <li class="person">
+        <div class="placeholder placeholder--headshot"><p>Headshot coming</p></div>
+        <div>
+          <h3 class="person-name">{{ p.name }}</h3>
+          <p class="person-role">{{ p.role }}</p>
+        </div>
+      </li>
+      }
+    </ul>
+    } @else {
     <ul class="people">
       <li class="person">
         <!-- TODO: photo. Headshot of Max Ilecki. -->
@@ -51,6 +66,8 @@
       </li>
     </ul>
     <p>Additional officers will be listed after elections.</p>
+    }
+    }
     <!-- Edited at /admin > Site content > "Web and social media officer" (brief section 7). -->
     @if (content.get('web_officer'); as officer) {
       <p><strong>Website, social media, and weekly update:</strong> {{ officer }}</p>

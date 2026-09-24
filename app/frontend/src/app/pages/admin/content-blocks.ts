@@ -1,6 +1,6 @@
 // Text blocks officers can edit at /admin > Site content. Keep the keys and
 // kinds in step with backend/src/utils/ContentBlocks.h.
-export type BlockKind = 'text' | 'paragraph' | 'lines' | 'email' | 'url' | 'links';
+export type BlockKind = 'text' | 'paragraph' | 'lines' | 'email' | 'url' | 'links' | 'people';
 
 export interface ContentBlock {
   key: string;
@@ -60,5 +60,11 @@ export const CONTENT_BLOCKS: ContentBlock[] = [
     page: { name: 'About', path: '/about' },
     hint: 'The officer role and name that own the website, social media, and the weekly update.',
     example: 'Director of Electronic Systems, Jane Doe',
+  },
+  {
+    key: 'leadership', kind: 'people', label: 'Leadership',
+    page: { name: 'About', path: '/about', fragment: 'leadership-title' },
+    hint: 'One person per line, written as "Name | Role", in the order to show them. Leave empty to keep the current list (Max Ilecki and Jordan Vandeventer, Co-Presidents; Leslie Haxby-McNeill, Faculty Advisor). Update after elections.',
+    example: 'Max Ilecki | Co-President',
   },
 ];

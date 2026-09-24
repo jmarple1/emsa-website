@@ -40,7 +40,7 @@
       <header class="dash-card-head">
         <div>
           <h3 id="c-weekly">Join sign-ups per week</h3>
-          <p class="dash-card-sub">{{ weeklyTotal() }} in the {{ rangeLabel() }}</p>
+          <p class="dash-card-sub">{{ weeklyTotal() }} {{ inRangeLabel() }}</p>
         </div>
         <button type="button" class="dash-link" (click)="toggleTable('weekly')">{{ showTable()['weekly'] ? 'Show chart' : 'Show as table' }}</button>
       </header>
@@ -103,6 +103,27 @@
       }
     </section>
 
+    <!-- Site visits (cookie-free counts, see /privacy) -->
+    <section class="dash-card card-surface dash-card--wide" aria-labelledby="c-views">
+      <header class="dash-card-head">
+        <div>
+          <h3 id="c-views">Page views per week</h3>
+          <p class="dash-card-sub">{{ viewsTotal().toLocaleString('en-US') }} {{ inRangeLabel() }}. Counted without cookies or IP addresses; officers and visitors who opt out of tracking aren't counted.</p>
+        </div>
+        <button type="button" class="dash-link" (click)="toggleTable('views')">{{ showTable()['views'] ? 'Show chart' : 'Show as table' }}</button>
+      </header>
+      @if (showTable()['views']) {
+        <div class="table-wrap"><table class="data-table">
+          <thead><tr><th scope="col">Week of</th><th scope="col" class="num">Page views</th></tr></thead>
+          <tbody>@for (w of viewsWeekly(); track w.tip) {<tr><td>{{ w.label }}</td><td class="num">{{ w.value }}</td></tr>}</tbody>
+        </table></div>
+      } @else if (viewsTotal() === 0) {
+        <p class="dash-empty">No page views counted in this period yet.</p>
+      } @else {
+        <app-column-chart [data]="viewsWeekly()" unit="page views" />
+      }
+    </section>
+
     <!-- Naloxone by item -->
     <section class="dash-card card-surface" aria-labelledby="c-items">
       <header class="dash-card-head">
@@ -121,6 +142,20 @@
         <p class="dash-empty">No naloxone requests in this period.</p>
       } @else {
         <app-bar-list [data]="items()" />
+      }
+    </section>
+
+    <section class="dash-card card-surface" aria-labelledby="c-pages">
+      <header class="dash-card-head">
+        <div>
+          <h3 id="c-pages">Most viewed pages</h3>
+          <p class="dash-card-sub">Top pages {{ inRangeLabel() }}</p>
+        </div>
+      </header>
+      @if (topPages().length === 0) {
+        <p class="dash-empty">No page views counted in this period yet.</p>
+      } @else {
+        <app-bar-list [data]="topPages()" />
       }
     </section>
   </div>

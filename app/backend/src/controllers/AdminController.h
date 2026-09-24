@@ -10,6 +10,7 @@ public:
     ADD_METHOD_TO(AdminController::registrations, "/api/admin/registrations",  drogon::Get, "JwtFilter");
     ADD_METHOD_TO(AdminController::groupRequests, "/api/admin/group-requests", drogon::Get, "JwtFilter");
     ADD_METHOD_TO(AdminController::naloxone,      "/api/admin/naloxone",       drogon::Get, "JwtFilter");
+    ADD_METHOD_TO(AdminController::pageViews,     "/api/admin/page-views",     drogon::Get, "JwtFilter");
     METHOD_LIST_END
 
     using Callback = std::function<void(const drogon::HttpResponsePtr&)>;
@@ -18,4 +19,5 @@ public:
     void registrations(const drogon::HttpRequestPtr&, Callback&&);
     void groupRequests(const drogon::HttpRequestPtr&, Callback&&);
     void naloxone(const drogon::HttpRequestPtr&, Callback&&);
+    void pageViews(const drogon::HttpRequestPtr&, Callback&&);
 };

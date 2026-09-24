@@ -665,3 +665,18 @@ app-column-chart {
   color: var(--ink-muted);
   font-size: var(--text-sm);
 }
+
+/* Account tab */
+.account-card {
+  max-width: 34rem;
+}
+
+.account-card form {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: start;
+}
+
+.account-card .field {
+  width: 100%;
+}

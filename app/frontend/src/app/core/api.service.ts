@@ -56,6 +56,11 @@ export class ApiService {
   login(email: string, password: string) {
     return this.http.post<{ token: string; name: string; email: string }>('/api/auth/login', { email, password });
   }
+  /** Counts a page view (no cookies or personal data; see /privacy). */
+  pageView(path: string) { return this.http.post<void>('/api/pageview', { path }); }
+  changePassword(current: string, password: string) {
+    return this.http.post<{ ok: boolean }>('/api/admin/password', { current, password });
+  }
   adminTable(name: string) { return this.http.get<AdminTable>(`/api/admin/${name}`); }
   adminCsv(name: string) { return this.http.get(`/api/admin/${name}?format=csv`, { responseType: 'blob' }); }
 

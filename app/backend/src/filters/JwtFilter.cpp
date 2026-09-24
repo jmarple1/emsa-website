@@ -11,9 +11,11 @@ void JwtFilter::doFilter(const drogon::HttpRequestPtr& req,
         fcb(Http::jsonError(drogon::k401Unauthorized, "Missing or malformed Authorization header"));
         return;
     }
-    if (!JwtUtil::verifyToken(auth.substr(7))) {
+    const std::string officer = JwtUtil::subject(auth.substr(7));
+    if (officer.empty()) {
         fcb(Http::jsonError(drogon::k401Unauthorized, "Invalid or expired token"));
         return;
     }
+    req->attributes()->insert("officer", officer); // who is signed in
     fccb(); // token valid — proceed to controller
 }

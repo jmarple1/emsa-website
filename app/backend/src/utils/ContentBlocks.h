@@ -17,6 +17,7 @@ enum class Kind {
     Email,      // one email address (rendered as a mailto link)
     Url,        // one https:// address
     Links,      // one "Label | https://..." per line
+    People,     // one "Name | Role" per line
 };
 
 struct Block {
@@ -35,6 +36,7 @@ inline const std::vector<Block>& all() {
         {"aed_map_url", Kind::Url},         // In an Emergency: AED locations
         {"faq_ohio", Kind::Paragraph},      // FAQ: Ohio requirements answer
         {"web_officer", Kind::Text},        // About: web/social/update officer
+        {"leadership", Kind::People},       // About: leadership list
     };
     return blocks;
 }

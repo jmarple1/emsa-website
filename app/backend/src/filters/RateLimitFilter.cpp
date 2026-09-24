@@ -84,3 +84,10 @@ void LoginRateLimitFilter::doFilter(const drogon::HttpRequestPtr& req,
     // Tighter than the form limiter to slow down password guessing.
     limit("login:" + Http::clientIp(req), 5, fcb, fccb);
 }
+
+void PageViewRateLimitFilter::doFilter(const drogon::HttpRequestPtr& req,
+                                       drogon::FilterCallback&& fcb,
+                                       drogon::FilterChainCallback&& fccb) {
+    const auto h = std::hash<std::string>{}(salt() + Http::clientIp(req));
+    limit("pv:" + std::to_string(h), FORM_LIMIT, fcb, fccb);
+}

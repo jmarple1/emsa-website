@@ -119,6 +119,20 @@ std::string checkBlock(ContentBlocks::Kind kind, const std::string& v) {
         }
         return "";
     }
+    case K::People: {
+        const auto lines = splitLines(v);
+        if (lines.size() > 20) return "List 20 people or fewer.";
+        for (const auto& l : lines) {
+            const auto bar = l.find('|');
+            if (bar == std::string::npos) return "Write each person as: Name | Role";
+            std::string name = l.substr(0, bar), role = l.substr(bar + 1);
+            name.erase(name.find_last_not_of(" \t") + 1);
+            role.erase(0, role.find_first_not_of(" \t"));
+            if (name.empty() || role.empty()) return "Each person needs a name and a role.";
+            if (name.size() > 100 || role.size() > 100) return "Keep each name and role under 100 characters.";
+        }
+        return "";
+    }
     }
     return "Unknown content type.";
 }

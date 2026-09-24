@@ -1,6 +1,7 @@
 #include "PublicController.h"
 #include "utils/Http.h"
 #include <drogon/drogon.h>
+#include <set>
 
 // The list endpoints let PostgreSQL build the JSON (json_agg), so timestamps
 // come out as ISO 8601 and numbers stay numbers.
@@ -95,4 +96,31 @@ void PublicController::nextMeeting(const drogon::HttpRequestPtr&, Callback&& cb)
         [cb](const drogon::orm::DrogonDbException&) {
             cb(Http::jsonError(drogon::k500InternalServerError, "Could not load data"));
         });
+}
+
+// ---------------------------------------------------------------------------
+// POST /api/pageview   Body: { "path": "/join" }
+// Adds one to today's count for that page. Only the day, the page, and the
+// count are stored: no IP, cookie, or browser details (see /privacy).
+// ---------------------------------------------------------------------------
+void PublicController::pageView(const drogon::HttpRequestPtr& req, Callback&& cb) {
+    static const std::set<std::string> PAGES = {
+        "/", "/what-we-do", "/join", "/cpr-classes", "/naloxone", "/emergency",
+        "/events", "/about", "/faq", "/contact", "/privacy",
+    };
+    auto j = req->getJsonObject();
+    const std::string path = j && j->isObject() ? Http::str(*j, "path") : "";
+    auto noContent = [cb] {
+        auto resp = drogon::HttpResponse::newHttpResponse();
+        resp->setStatusCode(drogon::k204NoContent);
+        cb(resp);
+    };
+    if (!PAGES.count(path)) { noContent(); return; } // ignore anything else
+    drogon::app().getDbClient()->execSqlAsync(
+        "INSERT INTO page_views (day, path, views) "
+        "VALUES ((NOW() AT TIME ZONE 'America/New_York')::date, $1, 1) "
+        "ON CONFLICT (day, path) DO UPDATE SET views = page_views.views + 1",
+        [noContent](const drogon::orm::Result&) { noContent(); },
+        [noContent](const drogon::orm::DrogonDbException&) { noContent(); },
+        path);
 }

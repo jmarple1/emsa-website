@@ -154,3 +154,14 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_officers_email ON officers (lower(email));
 CREATE INDEX IF NOT EXISTS idx_classes_starts_at   ON classes (starts_at);
 CREATE INDEX IF NOT EXISTS idx_events_starts_at    ON events (starts_at);
 CREATE INDEX IF NOT EXISTS idx_naloxone_fulfilled  ON naloxone_requests (fulfilled, fulfilled_at);
+
+-- ----------------------------------------------------------
+-- Page views per page per day (Oxford local date). Counts only:
+-- no IP, cookie, or browser details (see the /privacy page).
+-- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS page_views (
+    day   DATE        NOT NULL,
+    path  VARCHAR(50) NOT NULL,
+    views INTEGER     NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, path)
+);

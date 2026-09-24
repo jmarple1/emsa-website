@@ -19,6 +19,7 @@ export const routes: Routes = [
   { path: 'about', ...page('about'), loadComponent: () => import('./pages/about/about').then((m) => m.About) },
   { path: 'faq', ...page('faq'), loadComponent: () => import('./pages/faq/faq').then((m) => m.Faq) },
   { path: 'contact', ...page('contact'), loadComponent: () => import('./pages/contact/contact').then((m) => m.Contact) },
+  { path: 'privacy', ...page('privacy'), loadComponent: () => import('./pages/privacy/privacy').then((m) => m.Privacy) },
   {
     path: 'admin',
     title: 'Officer sign-in | EMS Alliance (EMSA)',

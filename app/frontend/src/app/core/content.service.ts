@@ -49,6 +49,16 @@ export class ContentService {
       .filter((x): x is SiteLink => !!x && !!x.label && /^https:\/\/\S+$/.test(x.url));
   }
 
+  /** "Name | Role" lines. */
+  people(key: string): { name: string; role: string }[] {
+    return this.lines(key)
+      .map((l) => {
+        const i = l.indexOf('|');
+        return i < 0 ? null : { name: l.slice(0, i).trim(), role: l.slice(i + 1).trim() };
+      })
+      .filter((x): x is { name: string; role: string } => !!x && !!x.name && !!x.role);
+  }
+
   /** A single https:// URL, or null. */
   url(key: string): string | null {
     const v = this.get(key);

@@ -12,6 +12,7 @@ export class AuthService {
 
   readonly token = computed(() => this.session()?.token ?? null);
   readonly name = computed(() => this.session()?.name ?? '');
+  readonly email = computed(() => this.session()?.email ?? '');
   /** True when the server rejected the token (shown on the sign-in form). */
   readonly expired = signal(false);
 

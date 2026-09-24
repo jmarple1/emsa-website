@@ -70,3 +70,10 @@ void AdminController::naloxone(const drogon::HttpRequestPtr& req, Callback&& cb)
           " FROM naloxone_requests ORDER BY created_at DESC",
           "emsa-naloxone-requests.csv", cb);
 }
+
+void AdminController::pageViews(const drogon::HttpRequestPtr& req, Callback&& cb) {
+    table(req,
+          "SELECT to_char(day, 'YYYY-MM-DD') AS day, path AS page, views"
+          " FROM page_views ORDER BY day DESC, views DESC",
+          "emsa-page-views.csv", cb);
+}
