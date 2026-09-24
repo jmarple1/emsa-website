@@ -33,6 +33,8 @@ services:
     pull_policy: never
     container_name: emsa-frontend
     logging: *logging
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ > /dev/null || exit 1"]
     networks:
       - internal
       - edge
