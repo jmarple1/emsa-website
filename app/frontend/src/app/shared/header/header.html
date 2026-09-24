@@ -1,0 +1,21 @@
+<header class="site-header">
+  <div class="wrap header-bar">
+    <!-- TODO: logo. Replace this text wordmark with the EMSA logo files (vector + PNG) when Max supplies them. -->
+    <a class="wordmark" routerLink="/"><span class="wordmark-badge">EMSA</span> <span class="wordmark-name">EMS Alliance</span></a>
+    <button type="button" class="menu-toggle" aria-controls="site-nav" [attr.aria-expanded]="open()" (click)="toggle()">
+      {{ open() ? 'Close' : 'Menu' }}@if (open()) {<span class="visually-hidden"> menu</span>}
+    </button>
+    <a class="btn btn-primary btn-join" routerLink="/join" routerLinkActive ariaCurrentWhenActive="page">Join EMSA</a>
+  </div>
+  <nav id="site-nav" class="site-nav" [class.is-open]="open()" aria-label="Main">
+    <ul class="wrap nav-list">
+      @for (link of links; track link.path) {
+        <li>
+          <a [routerLink]="link.path" routerLinkActive ariaCurrentWhenActive="page"
+             [routerLinkActiveOptions]="{ exact: link.path === '/' }">{{ link.label }}</a>
+        </li>
+      }
+      <li><a class="nav-emergency" routerLink="/emergency" routerLinkActive ariaCurrentWhenActive="page">In an Emergency</a></li>
+    </ul>
+  </nav>
+</header>

@@ -1,0 +1,96 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <h1 id="hero-title">Hands-on training for a safer campus</h1>
+      <p class="lead">EMS Alliance (EMSA) is a registered student organization at Miami University that teaches free CPR, First Aid, and Stop the Bleed classes and distributes naloxone and harm reduction supplies.</p>
+      <p class="btn-row"><a class="btn btn-primary btn-lg" routerLink="/join">Join EMSA</a></p>
+      <ul class="fast-facts">
+        <li>Open to any Miami student</li>
+        <li>No requirements</li>
+        <li>No dues</li>
+        <li>About 1 hour a week</li>
+      </ul>
+      <p class="btn-row">
+        <a class="btn btn-secondary" routerLink="/cpr-classes" fragment="register">Sign up for a free CPR class</a>
+        <a class="btn btn-secondary" routerLink="/naloxone" fragment="request">Request naloxone</a>
+      </p>
+    </div>
+    <div class="hero-media">
+      <!-- TODO: consent. Photo A shows four identifiable students and their consent is still pending (PHOTO-DIRECTIONS).
+           Do not publish until Max confirms it. If consent falls through, use photos/G-backup-hero-CROP-no-screen.jpg
+           (alt: "Students practice CPR during an EMSA training session.") and never show more of that frame. -->
+      <img src="/photos/A-home-hero-CROP-3x2.jpg" alt="EMSA members practicing CPR on manikins during a class at Miami University." width="1440" height="960" fetchpriority="high">
+    </div>
+  </div>
+</section>
+
+<section class="impact on-dark" aria-labelledby="impact-title">
+  <div class="wrap">
+    <h2 id="impact-title">Our impact so far</h2>
+    <!-- Impact numbers (brief section 7). Update them from the tracking sheet under the entity account.
+         The same numbers also appear on about.html, what-we-do.html, and naloxone.html. -->
+    <ul class="stats">
+      <li><span class="stat-number">{{ impact.fmt('cpr_certified') }}</span> <span class="stat-label">students certified in CPR</span></li>
+      <li><span class="stat-number">{{ impact.fmt('stop_the_bleed') }}</span> <span class="stat-label">trained in Stop the Bleed</span></li>
+      <li><span class="stat-number">{{ impact.fmt('narcan_kits') }}</span> <span class="stat-label">Narcan kits and {{ impact.fmt('test_strips') }} fentanyl test strips across {{ impact.fmt('frat_houses') }} fraternity houses</span></li>
+    </ul>
+    <p class="recognition-line">2024–25 New Student Organization of the Year · NCEMSF member and New Group Initiative grant recipient</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="programs-title">
+  <div class="wrap">
+    <h2 id="programs-title">What we do</h2>
+    <ul class="tiles">
+      <li class="tile">
+        <div class="tile-media">
+          <!-- TODO: photo. Photo B is a placeholder screenshot. The .photo-b-frame rule in css/style.css shows only the
+               hands-on-manikin close-up, which keeps faces (consent pending), a high school name, and a Miami shirt off screen,
+               but the full file is still served. Export the original at that crop (or any crop without faces or school names). -->
+          <div class="photo-b-frame"><img class="photo-b" src="/photos/B-training-tile-PLACEHOLDER-send-original.jpg" alt="A student practices rescue breaths with a bag-valve mask during an EMSA CPR class." width="1006" height="1360" loading="lazy"></div>
+        </div>
+        <div class="tile-body">
+          <h3>Training</h3>
+          <p>Free AHA BLS and Heartsaver CPR/First Aid courses taught by EMSA's certified instructors, plus hands-on Stop the Bleed training.</p>
+          <a class="tile-link" routerLink="/what-we-do" fragment="training">Explore training</a>
+        </div>
+      </li>
+      <li class="tile">
+        <div class="tile-media">
+          <img class="crop-4x3" src="/photos/D-harm-reduction-kits-table.jpg" alt="Harm reduction kits assembled by EMSA for distribution to fraternity houses." width="1024" height="768" loading="lazy">
+        </div>
+        <div class="tile-body">
+          <h3>Harm Reduction</h3>
+          <p>Free naloxone on campus through Ohio's Project DAWN program, and harm reduction supplies for fraternity houses.</p>
+          <a class="tile-link" routerLink="/what-we-do" fragment="harm-reduction">Explore harm reduction</a>
+        </div>
+      </li>
+      <li class="tile">
+        <div class="tile-media">
+          <!-- TODO: photo. Tabling or Heart Club shot (coming from Max). No children and no school names. -->
+          <div class="placeholder placeholder--media">
+            <p><span class="placeholder-tag">Placeholder</span> Photo coming: tabling or Heart Club shot</p>
+          </div>
+        </div>
+        <div class="tile-body">
+          <h3>Community Outreach</h3>
+          <p>K–6 Outreach teaches personal safety fundamentals in classrooms at schools in the community, and EMSA runs an American Heart Association Heart Club.</p>
+          <a class="tile-link" routerLink="/what-we-do" fragment="outreach">Explore community outreach</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="partners-title">
+  <div class="wrap">
+    <h2 id="partners-title">Partners and affiliations</h2>
+    <!-- Names only. Never add partner logos (brief section 11). -->
+    <ul class="partner-list">
+      <li>Butler County General Health District</li>
+      <li>Miami University Office of Student Wellness</li>
+      <li>Project DAWN, Ohio Department of Health</li>
+      <li>National Collegiate EMS Foundation (NCEMSF)</li>
+    </ul>
+  </div>
+</section>

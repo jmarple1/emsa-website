@@ -1,0 +1,151 @@
+<div class="page-head">
+  <div class="wrap">
+    <h1>Naloxone &amp; harm reduction</h1>
+    <p class="lead">Free naloxone (Narcan) and harm reduction supplies, for yourself or for your chapter house.</p>
+    <p class="btn-row"><a class="btn btn-primary btn-lg" routerLink="/naloxone" fragment="request">Request naloxone</a></p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="dawn-title">
+  <div class="wrap">
+    <div class="notice notice--alert measure">
+      <p><strong>If someone may be overdosing, call 911 now.</strong> <a routerLink="/emergency">What to do in an emergency</a></p>
+    </div>
+    <h2 id="dawn-title">Project DAWN</h2>
+    <p class="measure">Project DAWN is an Ohio Department of Health program that provides free naloxone. EMSA distributes free naloxone on campus through Project DAWN, including a Narcan distribution night each semester.</p>
+    <p class="measure">Naloxone, often sold under the brand name Narcan, is a medication that can reverse an opioid overdose.</p>
+    <p><a href="https://odh.ohio.gov/know-our-programs/project-dawn/">Project DAWN at the Ohio Department of Health</a></p>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="kit-title">
+  <div class="wrap split">
+    <div>
+      <h2 id="kit-title">What's in a kit</h2>
+      <p>Each Narcan kit contains Narcan, a naloxone nasal spray.</p>
+      <!-- TODO: content. Confirm exactly what goes in each kit; brief section 5 asks for "what's in a Narcan kit" but gives no list. -->
+      <div class="placeholder">
+        <p><span class="placeholder-tag">Placeholder</span> The full list of what's in each kit goes here once Max confirms it.</p>
+      </div>
+      <p><strong>Kits are free and may not be resold.</strong></p>
+    </div>
+    <div>
+      <!-- TODO: photo. Photo E (inside a kit) is held back. Its left half shows a card with the Miami M, which Max has not
+           cleared, and cropping it with CSS would still serve the logo (in reader view or through the image's own URL).
+           When the original arrives, export it cropped tight to the box, and to the right half (test strip and naloxone
+           materials) unless Max clears the card, then put it here. Alt text from PHOTO-DIRECTIONS: "Inside an EMSA harm
+           reduction kit: fentanyl test strips, naloxone information, and a thank-you card." (Adjust if the crop drops the card.) -->
+      <div class="placeholder placeholder--media">
+        <p><span class="placeholder-tag">Placeholder</span> Photo coming: inside an EMSA harm reduction kit</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="supplies-title">
+  <div class="wrap split">
+    <div>
+      <h2 id="supplies-title">Fentanyl test strips and other supplies</h2>
+      <p>Along with naloxone, EMSA provides fentanyl test strips, condoms, and educational materials. Fentanyl test strips check a drug sample for fentanyl. A negative result does not mean a drug is safe.</p>
+      <!-- Impact numbers (brief section 7): keep in step with index.html, about.html, and what-we-do.html. -->
+      <p>With Miami's Office of Student Wellness and the Butler County General Health District, EMSA has placed {{ impact.fmt('narcan_kits') }} Narcan kits, {{ impact.fmt('test_strips') }} fentanyl test strips, {{ impact.fmt('condoms') }} condoms, and educational materials in {{ impact.fmt('frat_houses') }} fraternity houses.</p>
+    </div>
+    <div>
+      <img class="rounded" src="/photos/D-harm-reduction-kits-table.jpg" alt="Harm reduction kits assembled by EMSA for distribution to fraternity houses." width="1024" height="768" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="law-title">
+  <div class="wrap">
+    <h2 id="law-title">Ohio law</h2>
+    <ul class="measure">
+      <li>Naloxone is available over the counter in Ohio.</li>
+      <li>Ohio's Good Samaritan Law gives limited immunity for minor possession offenses to the person who overdosed and the person who calls 911.</li>
+    </ul>
+    <p><a href="https://odh.ohio.gov/know-our-programs/oh-against-od/good-samaritan-law/call-no-matter-what">Ohio's Good Samaritan Law at the Ohio Department of Health</a></p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="pickup-title">
+  <div class="wrap">
+    <h2 id="pickup-title">How to get naloxone</h2>
+    <ul class="measure">
+      <li>Pick it up at EMSA's Narcan distribution night, held each semester.</li>
+      <li>Or request it with the form below and arrange a pickup.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="request" class="section section-alt" aria-labelledby="request-title">
+  <div class="wrap">
+    <h2 id="request-title">Request naloxone or supplies</h2>
+    <p class="measure">Request naloxone or harm reduction supplies for yourself or for your chapter house.</p>
+    <ul class="checklist measure">
+      <li>No name required.</li>
+      <li>Choose pickup at the Narcan distribution night, or a contact method that works for you.</li>
+      <li>We do not share the information you submit.</li>
+    </ul>
+    <!-- Naloxone and supply request (brief section 11 privacy): NO name field. The backend never stores or logs
+         the requester's IP, only officers can read requests, and fulfilled requests are deleted automatically. -->
+    <form id="naloxone-form" class="form" [formGroup]="f.form" (ngSubmit)="submit()" novalidate aria-labelledby="request-title">
+      <fieldset class="field" [attr.aria-invalid]="!!f.error('requesting_for')"
+                [attr.aria-describedby]="f.error('requesting_for') ? 'nal-for-error' : null">
+        <legend>Who is this request for?</legend>
+        <label class="choice"><input type="radio" formControlName="requesting_for" value="self"> Myself</label>
+        <label class="choice"><input type="radio" formControlName="requesting_for" value="chapter_house"> My chapter house</label>
+        @if (f.error('requesting_for'); as e) {<p class="field-error" id="nal-for-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </fieldset>
+
+      @if (f.form.value.requesting_for === 'chapter_house') {
+        <div class="field">
+          <label for="nal-house">Chapter house</label>
+          <input id="nal-house" type="text" formControlName="chapter_house" maxlength="200"
+                 [attr.aria-invalid]="!!f.error('chapter_house')" [attr.aria-describedby]="f.error('chapter_house') ? 'nal-house-error' : null">
+          @if (f.error('chapter_house'); as e) {<p class="field-error" id="nal-house-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+        </div>
+      }
+
+      <fieldset class="field" [attr.aria-invalid]="!!f.error('items')"
+                [attr.aria-describedby]="f.error('items') ? 'nal-items-error' : null">
+        <legend>What would you like? (choose any)</legend>
+        @for (item of items; track item.value) {
+          <label class="choice">
+            <input type="checkbox" [checked]="isChecked(item.value)" (change)="toggleItem(item.value, $event)"> {{ item.label }}
+          </label>
+        }
+        @if (f.error('items'); as e) {<p class="field-error" id="nal-items-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </fieldset>
+
+      <fieldset class="field" [attr.aria-invalid]="!!f.error('pickup')"
+                [attr.aria-describedby]="f.error('pickup') ? 'nal-pickup-error' : null">
+        <legend>How would you like to get it?</legend>
+        <label class="choice"><input type="radio" formControlName="pickup" value="distribution_night"> Pick it up at the Narcan distribution night</label>
+        <label class="choice"><input type="radio" formControlName="pickup" value="arranged"> Arrange a pickup</label>
+        @if (f.error('pickup'); as e) {<p class="field-error" id="nal-pickup-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </fieldset>
+
+      @if (f.form.value.pickup === 'arranged') {
+        <div class="field">
+          <label for="nal-contact">How should we reach you to arrange pickup?</label>
+          <p class="field-hint" id="nal-contact-hint">Any contact method that works for you. You don't need to give your name.</p>
+          <input id="nal-contact" type="text" formControlName="contact_method" maxlength="300"
+                 [attr.aria-invalid]="!!f.error('contact_method')"
+                 [attr.aria-describedby]="f.error('contact_method') ? 'nal-contact-hint nal-contact-error' : 'nal-contact-hint'">
+          @if (f.error('contact_method'); as e) {<p class="field-error" id="nal-contact-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+        </div>
+      }
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="f.status() === 'sending'">
+          {{ f.status() === 'sending' ? 'Sending…' : 'Send request' }}
+        </button>
+      </div>
+      <div role="status" aria-live="polite">
+        @if (f.status() === 'done' || f.status() === 'error') {
+          <p class="form-status" [class.form-status--done]="f.status() === 'done'" [class.form-status--error]="f.status() === 'error'">{{ f.message() }}</p>
+        }
+      </div>
+    </form>
+  </div>
+</section>

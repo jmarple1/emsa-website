@@ -1,0 +1,234 @@
+<div class="page-head">
+  <div class="wrap">
+    <h1>CPR, First Aid, and Stop the Bleed classes</h1>
+    <p class="lead">Free classes on campus, usually on Sundays. AHA courses are taught by EMSA's certified AHA instructors.</p>
+    <p class="btn-row">
+      <a class="btn btn-primary btn-lg" routerLink="/cpr-classes" fragment="register">Register for a class</a>
+      <a class="btn btn-secondary" routerLink="/cpr-classes" fragment="group-request">Request a class for your group</a>
+    </p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="courses-title">
+  <div class="wrap">
+    <h2 id="courses-title">Courses</h2>
+    <div class="group-layout">
+      <div class="group-media group-media--pair">
+        <!-- TODO: photo. Photo B is a placeholder screenshot. The .photo-b-frame rule in css/style.css shows only the
+             hands-on-manikin close-up, which keeps faces (consent pending), a high school name, and a Miami shirt off screen,
+             but the full file is still served. Export the original at that crop (or any crop without faces or school names). -->
+        <div class="photo-b-frame"><img class="photo-b" src="/photos/B-training-tile-PLACEHOLDER-send-original.jpg" alt="A student practices rescue breaths with a bag-valve mask during an EMSA CPR class." width="1006" height="1360" loading="lazy"></div>
+        <!-- TODO: photo. This text tile stands in for a Stop the Bleed photo until the reshoot
+             (practice on a trainer or the supplies table, projector off or out of frame).
+             Never use the Stop the Bleed or American College of Surgeons logo. -->
+        <div class="text-tile" aria-hidden="true">
+          <p class="text-tile-title">Stop the Bleed</p>
+          <p class="text-tile-sub">Hands-on bleeding-control training</p>
+        </div>
+      </div>
+      <div class="programs">
+        <article class="program">
+          <h3>BLS (Basic Life Support)</h3>
+          <p>The American Heart Association's BLS course.</p>
+          <p class="program-who"><strong>Who it's for:</strong> Pre-health and healthcare students.</p>
+          <p class="program-who"><strong>You receive:</strong> An AHA eCard, valid for two years.</p>
+        </article>
+        <article class="program">
+          <h3>Heartsaver CPR/First Aid</h3>
+          <p>The American Heart Association's Heartsaver course in CPR and first aid.</p>
+          <p class="program-who"><strong>Who it's for:</strong> Everyone.</p>
+          <p class="program-who"><strong>You receive:</strong> An AHA eCard, valid for two years.</p>
+        </article>
+        <article class="program">
+          <h3>Stop the Bleed</h3>
+          <p>Hands-on bleeding-control training. About {{ impact.fmt('stop_the_bleed') }} students have been trained so far.</p>
+          <p class="program-who"><strong>Who it's for:</strong> Everyone.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="details-title">
+  <div class="wrap">
+    <h2 id="details-title">Class details</h2>
+    <dl class="facts measure">
+      <div>
+        <dt>Cost</dt>
+        <dd>Free.</dd>
+      </div>
+      <div>
+        <dt>Where</dt>
+        <dd>On campus.</dd>
+      </div>
+      <div>
+        <dt>When</dt>
+        <dd>Usually on Sundays. Dates are in the schedule below and on the <a routerLink="/events">Events calendar</a>.</dd>
+      </div>
+      <div>
+        <dt>Your AHA eCard</dt>
+        <dd>BLS and Heartsaver participants receive an AHA eCard, purchased from and issued through the Therapeutic Professionals Training Center, typically within 20 business days. It is valid for two years, through the end of the month it was issued.</dd>
+      </div>
+      <div>
+        <dt>Registration</dt>
+        <dd>Free, through the form on this page. Space in each class is limited.</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section id="schedule" class="section" aria-labelledby="schedule-title">
+  <div class="wrap">
+    <h2 id="schedule-title">This semester's schedule</h2>
+    <!-- Classes come from the classes table (officers add them). Until one is added, the placeholder shows. -->
+    @if (classes().length) {
+      <ul class="schedule">
+        @for (c of classes(); track c.id) {
+          <li>
+            <h3>{{ c.course }}</h3>
+            <p>{{ when(c.starts_at, c.ends_at) }}</p>
+            <p class="schedule-meta">{{ c.location }} · {{ c.seats_left > 0 ? c.seats_left + ' of ' + c.capacity + ' seats left' : 'Full' }}</p>
+          </li>
+        }
+      </ul>
+    } @else {
+      <!-- TODO: class dates. Add this semester's classes (date, time, course, and on-campus location) once Max sets them. -->
+      <div class="placeholder">
+        <p><span class="placeholder-tag">Placeholder</span> This semester's class dates go here: date, time, course, and location for each class.</p>
+      </div>
+    }
+    <p>Every class also appears on the <a routerLink="/events">EMSA events calendar</a>.</p>
+  </div>
+</section>
+
+<section id="register" class="section section-alt" aria-labelledby="register-title">
+  <div class="wrap">
+    <h2 id="register-title">Register for a class</h2>
+    <p class="measure">Registration is free. Choose your class in the form below.</p>
+    <!-- Class registration. Capacity is enforced by the backend (one transaction per registration). -->
+    @if (openClasses().length === 0) {
+      <p class="notice">No classes are open for registration right now. Check back once this semester's classes are posted.</p>
+    } @else {
+      <form id="register-form" class="form" [formGroup]="reg.form" (ngSubmit)="register()" novalidate aria-labelledby="register-title">
+        <p class="field-hint">All fields are required.</p>
+
+        <div class="field">
+          <label for="reg-class">Class</label>
+          <select id="reg-class" formControlName="class_id"
+                  [attr.aria-invalid]="!!reg.error('class_id')" [attr.aria-describedby]="reg.error('class_id') ? 'reg-class-error' : null">
+            <option [ngValue]="null">Choose a class</option>
+            @for (c of openClasses(); track c.id) {
+              <option [ngValue]="c.id">{{ c.course }}: {{ when(c.starts_at, c.ends_at) }}</option>
+            }
+          </select>
+          @if (reg.error('class_id'); as e) {<p class="field-error" id="reg-class-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+        </div>
+
+        <div class="field">
+          <label for="reg-name">Name</label>
+          <input id="reg-name" type="text" formControlName="name" autocomplete="name" maxlength="200"
+                 [attr.aria-invalid]="!!reg.error('name')" [attr.aria-describedby]="reg.error('name') ? 'reg-name-error' : null">
+          @if (reg.error('name'); as e) {<p class="field-error" id="reg-name-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+        </div>
+
+        <div class="field">
+          <label for="reg-email">Miami email</label>
+          <p class="field-hint" id="reg-email-hint">Ends in &#64;miamioh.edu</p>
+          <input id="reg-email" type="email" formControlName="miami_email" autocomplete="email" maxlength="254"
+                 [attr.aria-invalid]="!!reg.error('miami_email')"
+                 [attr.aria-describedby]="reg.error('miami_email') ? 'reg-email-hint reg-email-error' : 'reg-email-hint'">
+          @if (reg.error('miami_email'); as e) {<p class="field-error" id="reg-email-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="reg.status() === 'sending'">
+            {{ reg.status() === 'sending' ? 'Registering…' : 'Register' }}
+          </button>
+        </div>
+        <div role="status" aria-live="polite">
+          @if (reg.status() === 'done' || reg.status() === 'error') {
+            <p class="form-status" [class.form-status--done]="reg.status() === 'done'" [class.form-status--error]="reg.status() === 'error'">{{ reg.message() }}</p>
+          }
+        </div>
+      </form>
+    }
+  </div>
+</section>
+
+<section id="group-request" class="section" aria-labelledby="group-title">
+  <div class="wrap">
+    <h2 id="group-title">Request a class for your group</h2>
+    <p class="measure">Chapters, RAs, teams, and offices can request a class. The form asks for your group's name, a contact, preferred dates, the course you want, and your headcount.</p>
+    <!-- Group class request. Fields (brief section 5): group name, contact, preferred dates, course type, headcount. -->
+    <form id="group-form" class="form" [formGroup]="grp.form" (ngSubmit)="requestGroup()" novalidate aria-labelledby="group-title">
+      <p class="field-hint">All fields are required.</p>
+
+      <div class="field">
+        <label for="grp-name">Group name</label>
+        <input id="grp-name" type="text" formControlName="group_name" maxlength="200"
+               [attr.aria-invalid]="!!grp.error('group_name')" [attr.aria-describedby]="grp.error('group_name') ? 'grp-name-error' : null">
+        @if (grp.error('group_name'); as e) {<p class="field-error" id="grp-name-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="field">
+        <label for="grp-contact">Contact name</label>
+        <input id="grp-contact" type="text" formControlName="contact_name" autocomplete="name" maxlength="200"
+               [attr.aria-invalid]="!!grp.error('contact_name')" [attr.aria-describedby]="grp.error('contact_name') ? 'grp-contact-error' : null">
+        @if (grp.error('contact_name'); as e) {<p class="field-error" id="grp-contact-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="field">
+        <label for="grp-email">Contact email</label>
+        <input id="grp-email" type="email" formControlName="contact_email" autocomplete="email" maxlength="254"
+               [attr.aria-invalid]="!!grp.error('contact_email')" [attr.aria-describedby]="grp.error('contact_email') ? 'grp-email-error' : null">
+        @if (grp.error('contact_email'); as e) {<p class="field-error" id="grp-email-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="field">
+        <label for="grp-dates">Preferred dates</label>
+        <textarea id="grp-dates" formControlName="preferred_dates" maxlength="1000"
+                  [attr.aria-invalid]="!!grp.error('preferred_dates')" [attr.aria-describedby]="grp.error('preferred_dates') ? 'grp-dates-error' : null"></textarea>
+        @if (grp.error('preferred_dates'); as e) {<p class="field-error" id="grp-dates-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="field">
+        <label for="grp-course">Course</label>
+        <select id="grp-course" formControlName="course"
+                [attr.aria-invalid]="!!grp.error('course')" [attr.aria-describedby]="grp.error('course') ? 'grp-course-error' : null">
+          <option value="">Choose a course</option>
+          @for (c of courses; track c) {<option [value]="c">{{ c }}</option>}
+        </select>
+        @if (grp.error('course'); as e) {<p class="field-error" id="grp-course-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="field">
+        <label for="grp-count">Headcount</label>
+        <input id="grp-count" type="number" inputmode="numeric" min="1" max="1000" formControlName="headcount"
+               [attr.aria-invalid]="!!grp.error('headcount')" [attr.aria-describedby]="grp.error('headcount') ? 'grp-count-error' : null">
+        @if (grp.error('headcount'); as e) {<p class="field-error" id="grp-count-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="grp.status() === 'sending'">
+          {{ grp.status() === 'sending' ? 'Sending…' : 'Send request' }}
+        </button>
+      </div>
+      <div role="status" aria-live="polite">
+        @if (grp.status() === 'done' || grp.status() === 'error') {
+          <p class="form-status" [class.form-status--done]="grp.status() === 'done'" [class.form-status--error]="grp.status() === 'error'">{{ grp.message() }}</p>
+        }
+      </div>
+    </form>
+  </div>
+</section>
+
+<section id="course-notices" class="section section-alt" aria-labelledby="notices-title">
+  <div class="wrap">
+    <h2 id="notices-title">Course notices</h2>
+    <!-- Required word for word on this page and anywhere classes are promoted (CLAUDE.md non-negotiable 1). Never edit it. -->
+    <div class="notice">
+      <p>The American Heart Association strongly promotes knowledge and proficiency in all AHA courses and has developed instructional materials for this purpose. Use of these materials in an educational course does not represent course sponsorship by the AHA. Any fees charged for such a course, except for a portion of fees needed for AHA course materials, do not represent income to the AHA.</p>
+    </div>
+    <p class="measure">Stop the Bleed is a registered trademark licensed through the American College of Surgeons.</p>
+  </div>
+</section>

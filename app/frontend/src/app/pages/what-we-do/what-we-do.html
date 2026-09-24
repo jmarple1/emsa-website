@@ -1,0 +1,125 @@
+<div class="page-head">
+  <div class="wrap">
+    <h1>What we do</h1>
+    <p class="lead">EMSA's programs fall into three areas: training, harm reduction, and community outreach. Each one has a way for you to take part.</p>
+    <nav class="toc" aria-label="On this page">
+      <ul>
+        <li><a routerLink="/what-we-do" fragment="training">Training</a></li>
+        <li><a routerLink="/what-we-do" fragment="harm-reduction">Harm reduction</a></li>
+        <li><a routerLink="/what-we-do" fragment="outreach">Community outreach</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<section id="training" class="section" aria-labelledby="training-title">
+  <div class="wrap">
+    <h2 id="training-title">Training</h2>
+    <p class="section-intro">Free, hands-on classes on campus. EMSA's co-presidents, Max Ilecki and Jordan Vandeventer, are certified AHA instructors.</p>
+    <div class="group-layout">
+      <div class="group-media group-media--pair">
+        <!-- TODO: photo. Photo B is a placeholder screenshot. The .photo-b-frame rule in css/style.css shows only the
+             hands-on-manikin close-up, which keeps faces (consent pending), a high school name, and a Miami shirt off screen,
+             but the full file is still served. Export the original at that crop (or any crop without faces or school names). -->
+        <div class="photo-b-frame"><img class="photo-b" src="/photos/B-training-tile-PLACEHOLDER-send-original.jpg" alt="A student practices rescue breaths with a bag-valve mask during an EMSA CPR class." width="1006" height="1360" loading="lazy"></div>
+        <!-- TODO: photo. This text tile stands in for a Stop the Bleed photo until the reshoot
+             (practice on a trainer or the supplies table, projector off or out of frame).
+             Never use the Stop the Bleed or American College of Surgeons logo. -->
+        <div class="text-tile" aria-hidden="true">
+          <p class="text-tile-title">Stop the Bleed</p>
+          <p class="text-tile-sub">Hands-on bleeding-control training</p>
+        </div>
+      </div>
+      <div class="programs">
+        <article class="program">
+          <h3>CPR &amp; First Aid Classes</h3>
+          <p>Free AHA BLS and Heartsaver CPR/First Aid courses taught by EMSA's certified instructors, on campus, usually on Sundays. You learn to help in the minutes before emergency responders arrive, and you earn an AHA eCard valid for two years.</p>
+          <p class="program-who"><strong>Who it's for:</strong> BLS is for pre-health and healthcare students. Heartsaver CPR/First Aid is for everyone.</p>
+          <p class="program-actions"><a class="btn btn-secondary" routerLink="/cpr-classes" fragment="register">Register for a class</a></p>
+        </article>
+        <article class="program">
+          <h3>Stop the Bleed</h3>
+          <p>Hands-on bleeding-control training, so you know what to do when someone is badly bleeding. About {{ impact.fmt('stop_the_bleed') }} students have been trained so far.</p>
+          <p class="program-who"><strong>Who it's for:</strong> Everyone.</p>
+          <p class="program-actions">
+            <a class="btn btn-secondary" routerLink="/cpr-classes" fragment="register">Register for Stop the Bleed</a>
+            <a routerLink="/cpr-classes" fragment="group-request">Request a session for your group</a>
+          </p>
+        </article>
+      </div>
+    </div>
+    <p class="group-join">Members get hands-on emergency skills and AHA instruction. <a routerLink="/join">Join EMSA</a></p>
+  </div>
+</section>
+
+<section id="harm-reduction" class="section section-alt" aria-labelledby="harm-reduction-title">
+  <div class="wrap">
+    <h2 id="harm-reduction-title">Harm reduction</h2>
+    <p class="section-intro">EMSA gets naloxone and other harm reduction supplies to students, working with Ohio's Project DAWN program, the Butler County General Health District, and Miami's Office of Student Wellness.</p>
+    <div class="group-layout">
+      <div class="group-media">
+        <img class="crop-4x3" src="/photos/D-harm-reduction-kits-table.jpg" alt="Harm reduction kits assembled by EMSA for distribution to fraternity houses." width="1024" height="768" loading="lazy">
+      </div>
+      <div class="programs">
+        <article class="program">
+          <h3>Project DAWN Naloxone Distribution</h3>
+          <p>Free naloxone on campus through Ohio's Project DAWN program, including a Narcan distribution night each semester. Naloxone can reverse an opioid overdose, so having it on hand can save a life.</p>
+          <p class="program-who"><strong>Who it's for:</strong> Anyone on campus who wants naloxone on hand, for themselves or for their chapter house.</p>
+          <p class="program-actions"><a class="btn btn-secondary" routerLink="/naloxone" fragment="request">Request naloxone</a></p>
+        </article>
+        <article class="program">
+          <h3>Fraternity House Harm Reduction</h3>
+          <p>With Miami's Office of Student Wellness and the Butler County General Health District, EMSA has placed {{ impact.fmt('narcan_kits') }} Narcan kits, {{ impact.fmt('test_strips') }} fentanyl test strips, {{ impact.fmt('condoms') }} condoms, and educational materials in {{ impact.fmt('frat_houses') }} fraternity houses, so supplies are on hand where they may be needed.</p>
+          <p class="program-who"><strong>Who it's for:</strong> Fraternity chapter houses.</p>
+          <p class="program-actions"><a class="btn btn-secondary" routerLink="/naloxone" fragment="request">Request supplies for your house</a></p>
+        </article>
+      </div>
+    </div>
+    <p class="group-join">Every semester includes a Narcan distribution night. <a routerLink="/join">Join EMSA</a> to be part of it.</p>
+  </div>
+</section>
+
+<section id="outreach" class="section" aria-labelledby="outreach-title">
+  <div class="wrap">
+    <h2 id="outreach-title">Community outreach</h2>
+    <p class="section-intro">EMSA members bring safety education to younger students in the community and run an American Heart Association Heart Club.</p>
+    <div class="group-layout">
+      <div class="group-media group-media--pair">
+        <!-- TODO: photo. Tabling or Heart Club shot (coming from Max). -->
+        <div class="placeholder placeholder--media">
+          <p><span class="placeholder-tag">Placeholder</span> Photo coming: tabling or Heart Club shot</p>
+        </div>
+        <!-- TODO: photo. K–6 Outreach: supplies or an empty classroom only. Never children, never school names. -->
+        <div class="placeholder placeholder--media">
+          <p><span class="placeholder-tag">Placeholder</span> Photo coming: K–6 Outreach supplies or an empty classroom</p>
+        </div>
+      </div>
+      <div class="programs">
+        <article class="program">
+          <h3>K–6 Outreach</h3>
+          <p>Personal safety fundamentals, taught in classrooms at schools in the community, so younger students learn safety basics early.</p>
+          <p class="program-who"><strong>Who it's for:</strong> Students in kindergarten through sixth grade at schools in the community.</p>
+          <p class="program-actions"><a class="btn btn-secondary" routerLink="/join">Get involved in K–6 Outreach</a></p>
+        </article>
+        <article class="program">
+          <h3>AHA Heart Club</h3>
+          <p>EMSA runs an American Heart Association Heart Club as one of its programs.</p>
+          <!-- TODO: content. Add what the Heart Club does and who it's for; the brief gives no detail on either. -->
+          <div class="placeholder">
+            <p><span class="placeholder-tag">Placeholder</span> What the Heart Club does and who it's for.</p>
+          </div>
+          <p class="program-actions"><a class="btn btn-secondary" routerLink="/join">Get involved with the Heart Club</a></p>
+        </article>
+      </div>
+    </div>
+    <p class="group-join">Every semester includes a K–6 Outreach event. <a routerLink="/join">Join EMSA</a> to take part.</p>
+  </div>
+</section>
+
+<section class="cta-band" aria-labelledby="cta-title">
+  <div class="wrap">
+    <h2 id="cta-title">Be part of it</h2>
+    <p>Any Miami student can join EMSA. No requirements, no dues, and about 1 hour a week.</p>
+    <p><a class="btn btn-primary btn-lg" routerLink="/join">Join EMSA</a></p>
+  </div>
+</section>

@@ -1,0 +1,44 @@
+<div class="page-head">
+  <div class="wrap">
+    <h1>Events</h1>
+    <p class="lead">CPR classes, general body meetings, the Narcan distribution night, and outreach events are all on EMSA's calendar.</p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="calendar-title">
+  <div class="wrap">
+    <h2 id="calendar-title">EMSA calendar</h2>
+    <!-- Events come from the events table (replaces the Google Calendar embed). Officers add them. -->
+    @if (events().length) {
+      <ul class="schedule">
+        @for (e of events(); track e.id) {
+          <li>
+            <h3>{{ e.title }}</h3>
+            <p>{{ when(e.starts_at, e.ends_at) }}</p>
+            @if (e.location) {<p class="schedule-meta">{{ e.location }}</p>}
+            @if (e.description) {<p>{{ e.description }}</p>}
+          </li>
+        }
+      </ul>
+    } @else {
+      <!-- TODO: events. Add upcoming classes, meetings, the distribution night, and outreach events to the events table. -->
+      <div class="placeholder">
+        <p><span class="placeholder-tag">Placeholder</span> Upcoming EMSA events will be listed here.</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="semester-title">
+  <div class="wrap">
+    <h2 id="semester-title">What a semester includes</h2>
+    <ul class="semester">
+      <li><span class="semester-number">4</span> general body meetings</li>
+      <li><span class="semester-number">3</span> CPR classes</li>
+      <li><span class="semester-number">1</span> Narcan distribution night</li>
+      <li><span class="semester-number">1</span> K–6 Outreach event</li>
+    </ul>
+    <p class="measure">CPR classes are free and usually on Sundays. <a routerLink="/cpr-classes" fragment="register">Register for a class</a> on the CPR Classes page.</p>
+    <p class="measure">New to EMSA? <a routerLink="/join">Join EMSA</a> to get meeting details in the weekly update.</p>
+  </div>
+</section>
