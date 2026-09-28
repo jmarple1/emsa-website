@@ -1,0 +1,80 @@
+<!-- This page must open with "Call 911." and must never suggest that EMSA responds to emergencies
+     (CLAUDE.md non-negotiable 4). Do not add campus phone numbers or dispatch details copied from other sites. -->
+<div class="emergency-head on-dark">
+  <div class="wrap">
+    <h1>Call 911.</h1>
+    <p class="lead">EMS Alliance does not respond to emergencies. If someone is seriously hurt or ill, call 911 right away.</p>
+  </div>
+</div>
+
+<!-- TODO: medical review. Max (AHA instructor) should check the CPR, AED, and naloxone steps below against
+     current AHA guidance before this page is published. -->
+<div class="section">
+<div class="wrap steps-grid">
+  <section class="step-card" aria-labelledby="dispatcher-title">
+      <h2 id="dispatcher-title">Tell the dispatcher</h2>
+      <ul>
+        <li>Where you are: the address or building, floor, and room.</li>
+        <li>What happened.</li>
+        <li>Whether the person is awake and breathing.</li>
+      </ul>
+      <p>Stay on the line and follow the dispatcher's instructions. Don't hang up until they tell you to.</p>
+  </section>
+
+  <section class="step-card" aria-labelledby="until-title">
+      <h2 id="until-title">Until help arrives</h2>
+      <ul>
+        <li>Stay with the person.</li>
+        <li>Send someone to bring the nearest AED.</li>
+        <li>Send someone to meet the responders and show them the way.</li>
+      </ul>
+  </section>
+
+  <section class="step-card" aria-labelledby="cpr-title">
+      <h2 id="cpr-title">Hands-only CPR</h2>
+      <p>For a teen or adult who suddenly collapses, doesn't respond, and isn't breathing normally (or is only gasping):</p>
+      <ol>
+        <li>Call 911, or have someone call, and send someone for an AED.</li>
+        <li>Push hard and fast in the center of the chest: at least 2 inches deep, 100 to 120 pushes a minute. Let the chest come back up between pushes.</li>
+        <li>Keep going until an AED is ready to use, trained help takes over, or the person starts breathing normally.</li>
+      </ol>
+  </section>
+
+  <section class="step-card" aria-labelledby="aed-title">
+      <h2 id="aed-title">Using an AED</h2>
+      <ol>
+        <li>Turn the AED on and follow its voice prompts.</li>
+        <li>Attach the pads to the person's bare chest, placed as the pictures on the pads show.</li>
+        <li>Make sure no one is touching the person while the AED checks the heart rhythm or delivers a shock.</li>
+        <li>After a shock, or if no shock is advised, start CPR again right away and keep following the prompts.</li>
+      </ol>
+      <!-- Edited at /admin > Site content > "AED map link". Leave it empty if Miami doesn't publish one. -->
+      @if (content.url('aed_map_url'); as aed) {
+        <p><a [href]="aed">Miami's AED locations</a></p>
+      } @else {
+        <div class="placeholder">
+          <p><span class="placeholder-tag">Placeholder</span> A link to Miami's AED locations goes here, once someone confirms that Miami publishes an AED map.</p>
+        </div>
+      }
+  </section>
+
+  <section class="step-card step-card--wide" aria-labelledby="overdose-title">
+      <h2 id="overdose-title">Suspected opioid overdose</h2>
+      <ol>
+        <li>Call 911.</li>
+        <li>If the person isn't breathing normally, start CPR right away and keep going. If you're trained, give breaths with compressions; if not, hands-only CPR still helps.</li>
+        <li>Give naloxone (Narcan) as soon as you can, following the directions on the package. Naloxone doesn't replace CPR. If there's no response after 2 to 3 minutes, give another dose if you have one.</li>
+        <li>If the person is breathing, roll them onto their side and stay with them until help arrives.</li>
+      </ol>
+      <p><a routerLink="/naloxone">Get free naloxone and learn how EMSA distributes it</a></p>
+  </section>
+</div>
+</div>
+
+<section class="cta-band" aria-labelledby="learn-title">
+  <div class="wrap">
+    <h2 id="learn-title">Be ready before an emergency</h2>
+    <p>EMSA teaches free CPR classes on campus.</p>
+    <p><a class="btn btn-primary btn-lg" routerLink="/cpr-classes" fragment="register">Learn CPR with EMSA</a></p>
+  </div>
+</section>

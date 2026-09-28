@@ -1,0 +1,38 @@
+<div class="editor-head">
+  <div>
+    <h2>Your account</h2>
+    <p class="editor-sub">Signed in as <strong>{{ auth.name() }}</strong>. Use a password only you know, at least 12 characters, that you don't use anywhere else. A passphrase of four or more words works well.</p>
+  </div>
+</div>
+
+<section class="block card-surface account-card" aria-labelledby="pw-title">
+  <h3 id="pw-title" class="editor-section-title">Change password</h3>
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <!-- Lets password managers match the new password to this account. -->
+    <input type="text" name="username" [value]="auth.email()" autocomplete="username" hidden>
+    <div class="field">
+      <label for="pw-current">Current password</label>
+      <input id="pw-current" type="password" formControlName="current" autocomplete="current-password"
+             [attr.aria-invalid]="!!fieldError('current')" aria-describedby="pw-current-error">
+      @if (fieldError('current'); as msg) {<p id="pw-current-error" class="field-error">{{ msg }}</p>}
+    </div>
+    <div class="field">
+      <label for="pw-new">New password</label>
+      <input id="pw-new" type="password" formControlName="password" autocomplete="new-password"
+             [attr.aria-invalid]="!!fieldError('password')" aria-describedby="pw-new-hint pw-new-error">
+      <p id="pw-new-hint" class="field-hint">At least 12 characters.</p>
+      @if (fieldError('password'); as msg) {<p id="pw-new-error" class="field-error">{{ msg }}</p>}
+    </div>
+    <div class="field">
+      <label for="pw-confirm">New password again</label>
+      <input id="pw-confirm" type="password" formControlName="confirm" autocomplete="new-password"
+             [attr.aria-invalid]="!!fieldError('confirm')" aria-describedby="pw-confirm-error">
+      @if (fieldError('confirm'); as msg) {<p id="pw-confirm-error" class="field-error">{{ msg }}</p>}
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Change password' }}</button>
+    <div role="status">
+      @if (done()) {<p class="form-status"><span class="ok">✓ Password changed.</span> Use the new one next time you sign in.</p>}
+      @if (error()) {<p class="form-status form-status--error">{{ error() }}</p>}
+    </div>
+  </form>
+</section>

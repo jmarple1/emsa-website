@@ -4,12 +4,14 @@ This repo is the website for EMS Alliance (EMSA), a registered student organizat
 
 ## Build rules
 
-- Plain HTML, one shared `css/style.css`, minimal vanilla JS only where unavoidable. No frameworks, no npm, no build step. The site must be editable by a stranger in five years.
-- Ten pages per brief §4: index (Home), what-we-do, join, cpr-classes, naloxone, emergency, events, about, faq, contact. Kebab-case filenames, `.html`.
-- Mobile-first, WCAG 2.1 AA: semantic landmarks, one h1 per page, labeled form embeds, alt text from PHOTO-DIRECTIONS, visible focus states, contrast ≥ 4.5:1, no "click here" links.
-- Interactive pieces are embeds, never custom: Google Forms (join, class registration, group class request, naloxone request) and Google Calendar. Use clearly marked placeholder iframes (`<!-- TODO: real form URL -->`) until Max supplies live URLs.
-- Header/footer are duplicated across pages. When changing either, change it on every page in the same commit.
+- Stack: Angular frontend (app/frontend), C++ Drogon backend (app/backend), PostgreSQL (app/database), same architecture as KnottSoDirtyCo. Deployed to AWS EC2 under an EMSA-owned AWS account (entity email), never a personal account.
+- Forms and the calendar are served by our own API and database, not Google embeds. Collect only the fields in brief §6/§5; the naloxone form never collects a name and never stores IPs.
+- Header/footer live in shared Angular components; page copy stays verbatim from the fact-checked static pages unless the brief changes.
+- Ten pages per brief §4: Home (`/`), what-we-do, join, cpr-classes, naloxone, emergency, events, about, faq, contact.
+- Mobile-first, WCAG 2.1 AA (unchanged): semantic landmarks, one h1 per page, labeled form fields, alt text from PHOTO-DIRECTIONS, visible focus states, contrast ≥ 4.5:1, no "click here" links.
 - Persistent "Join EMSA" button in the header on every page.
+- Every officer-facing feature needs README docs written for a non-developer successor.
+- The static pages at the repo root stay as the copy reference until the Angular port matches them.
 - Links that go live now: GroupMe join https://groupme.com/join_group/117642476/zucoqhJi (join confirmation copy, "already a member" section, footer) and Miami Central signup https://miamicentral.miamioh.edu/EMSA/club_signup (Join page, Contact page).
 
 ## Non-negotiables (never remove or reword; brief §11 has full context)
@@ -28,7 +30,7 @@ Six files in `photos/`, named per PHOTO-DIRECTIONS. Two are marked PLACEHOLDER (
 
 ## Workflow
 
-- Preview with `python3 -m http.server 8000` from the repo root; test at phone width first.
-- Phases per brief §12. Phase 1 = Home, What We Do, Join, About, Contact with footer disclaimers.
-- Deploy target: GitHub Pages or Cloudflare Pages under an EMSA-owned account (entity email), custom domain with no Miami marks. Never deploy from or to a personal account.
-- Ask Max before: adding pages, adding JS beyond trivial, changing any non-negotiable text, or publishing any face-bearing photo.
+- Run locally per `app/README.md` (Docker Compose); test at phone width first.
+- Phases per brief §12. Phase 1 = working frontend + backend + database; phase 2 = officer-editable content (admin CRUD).
+- Deploy target: AWS EC2 under an EMSA-owned account (entity email), custom domain with no Miami marks. Never deploy from or to a personal account.
+- Ask Max before: changing any non-negotiable text or publishing any face-bearing photo.

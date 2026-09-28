@@ -1,0 +1,57 @@
+<!-- Privacy statement (brief section 17, "a privacy statement page covering every form").
+     Keep it in step with what the forms and the backend actually do: database/schema.sql,
+     backend/src/main.cpp (naloxone retention), and deploy/emsamu.site.conf (logging). -->
+<div class="page-head">
+  <div class="wrap">
+    <h1>Privacy</h1>
+    <p class="lead">What EMS Alliance collects on this site, why, and who can see it.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="wrap measure">
+    <h2>The short version</h2>
+    <ul class="checklist">
+      <li>We only ask for what we need to run EMSA, its classes, and naloxone distribution.</li>
+      <li>Only EMSA officers who sign in can see what you submit.</li>
+      <li>We don't sell your information, and we don't use it for advertising.</li>
+      <li>This site sets no cookies and uses no third-party trackers.</li>
+      <li>The naloxone and supply request form never asks for your name, and we never record the IP address of someone who uses it.</li>
+    </ul>
+
+    <h2>What each form collects</h2>
+
+    <h3>Join interest form</h3>
+    <p>Your name, Miami email, year, major, whether you're EMT-certified, and how you heard about EMSA. We use it to welcome you, add you to the weekly update, and understand which outreach works.</p>
+
+    <h3>Class registration</h3>
+    <p>Your name and Miami email, for the class you choose. We use it to hold your seat, send class details, and have your AHA eCard issued through the Therapeutic Professionals AHA Training Center when you complete the course.</p>
+
+    <h3>Group class request</h3>
+    <p>Your group's name, a contact name and email, preferred dates, the course, and the number of people. We use it to plan and schedule your group's class.</p>
+
+    <h3>Naloxone and supply request</h3>
+    <p>Who the request is for (you or a chapter house), the chapter house name if you give one, the items you want, and how you'd like to get them. A contact method is needed only if you choose to arrange a pickup, and it can be anything that works for you. No name is required. We do not share this information. The web server does not log requests made through this form, and each request is deleted automatically 30 days after an officer marks it fulfilled.</p>
+
+    <h2>Visit counts</h2>
+    <p>To see which pages are useful, the site counts how many times each page is viewed per day. That count is all we keep: no cookies, no IP address, no device details, and nothing that follows you to other sites. If your browser sends a "Do Not Track" or "Global Privacy Control" signal, your visits aren't counted at all.</p>
+
+    <h2>Technical logs</h2>
+    <p>Like most websites, our web server keeps short technical logs (such as the page requested and the visitor's IP address) to keep the site running and secure. They are replaced automatically as new ones are written and are not used for anything else. Naloxone and supply requests are left out of these logs.</p>
+
+    <h2>Where it's kept and for how long</h2>
+    <p>Submissions are stored in EMSA's database on a private web server, sent over an encrypted (HTTPS) connection. Nightly backups are kept for 14 days and then deleted. Except for naloxone requests, which are deleted as described above, we keep submissions until they're no longer needed for EMSA's work.</p>
+
+    <h2>Removing your information</h2>
+    <p>
+      To see or remove what you've submitted,
+      @if (content.get('contact_email'); as email) {
+        email us at <a [href]="'mailto:' + email">{{ email }}</a>.
+      } @else {
+        reach us through the <a routerLink="/contact">Contact page</a>.
+      }
+    </p>
+
+    <p>EMS Alliance is a student organization; this statement covers this website only. Miami University's own sites and services have their own privacy policies.</p>
+  </div>
+</div>

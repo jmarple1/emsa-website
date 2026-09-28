@@ -1,0 +1,61 @@
+<div class="editor-head">
+  <div>
+    <h2>Submissions</h2>
+    <p class="editor-sub">Everything people have sent through the site's forms, newest first.</p>
+  </div>
+</div>
+
+<div class="dash-filters" role="group" aria-label="Which form">
+  @for (l of lists; track l.key) {
+    <button type="button" class="seg" [attr.aria-pressed]="current() === l.key" (click)="show(l.key)">{{ l.label }}</button>
+  }
+</div>
+
+@if (current() === 'naloxone') {
+  <p class="notice measure">Naloxone requests are private: don't copy them anywhere else. Mark a request fulfilled once it's handed over; fulfilled requests are deleted automatically after 30 days.</p>
+}
+
+@if (error()) {
+  <p class="form-status form-status--error" role="alert">{{ error() }}</p>
+} @else if (table(); as t) {
+  <div class="table-tools">
+    <label class="visually-hidden" for="sub-search">Search this list</label>
+    <input id="sub-search" class="search" type="search" placeholder="Search this list" [value]="query()" (input)="query.set($any($event.target).value)">
+    <span class="table-count" role="status">{{ rows().length }} of {{ t.rows.length }} {{ t.rows.length === 1 ? 'entry' : 'entries' }}</span>
+    <button type="button" class="btn btn-secondary btn-sm" (click)="download()" [disabled]="!t.rows.length">Download CSV</button>
+  </div>
+  @if (t.rows.length === 0) {
+    <p class="dash-empty card-surface">Nothing here yet.</p>
+  } @else {
+    <div class="table-wrap" tabindex="0" role="region" aria-label="Submissions table">
+      <table class="data-table">
+        <thead><tr>
+          @for (c of t.columns; track c) {<th scope="col">{{ label(c) }}</th>}
+          @if (current() === 'naloxone') {<th scope="col"><span class="visually-hidden">Actions</span></th>}
+        </tr></thead>
+        <tbody>
+          @for (r of rows(); track r['id']) {
+            <tr>
+              @for (c of t.columns; track c) {
+                <td>
+                  @if (c === 'fulfilled') {
+                    <span class="pill" [attr.data-status]="r[c] === 'Yes' ? 'Done' : 'Open'">{{ r[c] === 'Yes' ? 'Fulfilled' : 'Open' }}</span>
+                  } @else {
+                    {{ r[c] ?? '' }}
+                  }
+                </td>
+              }
+              @if (current() === 'naloxone') {
+                <td class="row-actions">
+                  <button type="button" class="btn btn-secondary btn-sm" (click)="toggleFulfilled(r)">{{ r['fulfilled'] === 'Yes' ? 'Mark open' : 'Mark fulfilled' }}</button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+} @else {
+  <p role="status">Loading…</p>
+}

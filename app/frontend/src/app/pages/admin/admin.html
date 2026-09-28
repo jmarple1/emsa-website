@@ -1,0 +1,54 @@
+<div class="admin">
+  @if (!auth.token()) {
+    <section class="admin-signin" aria-labelledby="signin-title">
+      <div class="signin-card card-surface">
+        <p class="signin-brand"><span class="wordmark-badge">EMSA</span> Officer dashboard</p>
+        <h1 id="signin-title">Sign in</h1>
+        @if (auth.expired()) {
+          <p class="form-status" role="status">Your session ended. Please sign in again.</p>
+        }
+        <form id="login-form" [formGroup]="login" (ngSubmit)="signIn()" novalidate>
+          <div class="field">
+            <label for="login-email">Username or email</label>
+            <input id="login-email" type="text" formControlName="email" autocomplete="username" autocapitalize="none" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="login-password">Password</label>
+            <input id="login-password" type="password" formControlName="password" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary signin-btn" [disabled]="signingIn()">{{ signingIn() ? 'Signing in…' : 'Sign in' }}</button>
+          <div role="alert">
+            @if (loginError()) {<p class="form-status form-status--error">{{ loginError() }}</p>}
+          </div>
+        </form>
+        <p class="signin-help">Accounts are created by whoever runs the server (app/README.md, "Create an officer account").</p>
+      </div>
+    </section>
+  } @else {
+    <div class="admin-bar">
+      <div class="wrap admin-bar-inner">
+        <div>
+          <h1 class="admin-title">Officer dashboard</h1>
+          <p class="admin-who">Signed in as <strong>{{ auth.name() }}</strong></p>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="signOut()">Sign out</button>
+      </div>
+      <nav class="wrap admin-tabs" aria-label="Dashboard sections">
+        @for (t of tabs; track t.key) {
+          <button type="button" class="admin-tab" [attr.aria-current]="tab() === t.key ? 'page' : null" (click)="tab.set(t.key)">{{ t.label }}</button>
+        }
+      </nav>
+    </div>
+
+    <div class="wrap admin-main">
+      @switch (tab()) {
+        @case ('overview') { <app-admin-overview /> }
+        @case ('classes') { <app-classes-editor /> }
+        @case ('events') { <app-events-editor /> }
+        @case ('content') { <app-content-editor /> }
+        @case ('submissions') { <app-submissions /> }
+        @case ('account') { <app-account /> }
+      }
+    </div>
+  }
+</div>

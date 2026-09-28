@@ -2,3 +2,11 @@
 Thumbs.db
 *.log
 node_modules/
+
+# Full-stack app: secrets and build output
+.env
+*.local.md
+*.pem
+app/frontend/dist/
+app/frontend/.angular/
+app/backend/build/

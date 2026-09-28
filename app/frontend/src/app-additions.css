@@ -1,0 +1,617 @@
+/* ==========================================================================
+   Additions for the Angular app. styles.css is an unchanged copy of the
+   static site's css/style.css (only the photo URL changed); everything the
+   app needs on top of it lives here, using the same design tokens, so every
+   color pair below is one already measured in MORNING-REVIEW.md.
+   ========================================================================== */
+
+/* Focus moves to <main> after each page change; don't draw a ring around
+   the whole page for that. */
+main:focus {
+  outline: none;
+}
+
+/* 5. Header: the menu toggle is now a <button> with aria-expanded instead of
+   the :target link trick. */
+button.menu-toggle {
+  background: var(--paper);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.site-nav.is-open {
+  display: block;
+}
+
+.site-header:has(.site-nav.is-open) {
+  position: relative;
+}
+
+@media (min-width: 64em) {
+  .site-nav {
+    display: block;
+  }
+
+  .site-header:has(.site-nav.is-open) {
+    position: sticky;
+  }
+}
+
+/* Forms (join, class registration, group request, naloxone request) */
+.form {
+  display: grid;
+  gap: 1.25rem;
+  max-width: var(--measure);
+  margin: 0 0 var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field > label,
+.field legend {
+  color: var(--navy-900);
+  font-weight: 700;
+}
+
+.field-hint {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="number"],
+.field input[type="password"],
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.875rem;
+  padding: 0.55rem 0.75rem;
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+.field textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.field [aria-invalid="true"] {
+  border-color: var(--red-600);
+}
+
+fieldset.field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset.field legend {
+  margin-bottom: 0.35rem;
+  padding: 0;
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding-block: 0.3rem;
+}
+
+.choice input {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.2rem;
+  accent-color: var(--navy-700);
+}
+
+/* Errors: red text (6.54:1 on white) plus the word "Error" for screen readers,
+   so color is never the only signal. */
+.field-error {
+  margin: 0;
+  color: var(--red-600);
+  font-weight: 600;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+button.btn {
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button.btn:disabled {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.form-status:empty {
+  display: none;
+}
+
+.form-status {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border-left: 5px solid var(--navy-700);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--mist);
+}
+
+.form-status--done {
+  border-left-color: var(--teal-700);
+  background: var(--teal-050);
+}
+
+.form-status--error {
+  border-left-color: var(--red-600);
+  background: var(--red-050);
+}
+
+/* Class schedule and events list */
+.schedule {
+  display: grid;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.schedule > li {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--teal-700);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}
+
+.schedule h3 {
+  margin-bottom: 0.25em;
+}
+
+.schedule p {
+  margin: 0;
+}
+
+.schedule-meta {
+  color: var(--ink-muted);
+}
+
+/* Admin */
+.table-wrap {
+  overflow-x: auto;
+  margin: 0 0 var(--space-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th {
+  background: var(--mist);
+  color: var(--navy-900);
+  white-space: nowrap;
+}
+
+.tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.tab-list li + li {
+  margin-top: 0;
+}
+
+.tab-list button[aria-pressed="true"] {
+  background: var(--navy-700);
+  color: #fff;
+}
+
+
+/* ==========================================================================
+   Design pass (Sept 2026): shorter pages and a calmer rhythm.
+   - Tighter section padding.
+   - Thin 1px borders instead of thick colored side bars.
+   - Placeholders are hidden from visitors. The markup stays (next to its
+     TODO comment) so it's easy to find; the dashboard's Site content tab
+     shows officers which editable blocks are still empty.
+   ========================================================================== */
+
+:root {
+  --space-xl: clamp(2.25rem, 1.75rem + 2vw, 3.75rem);
+}
+
+.placeholder {
+  display: none !important;
+}
+
+.page-head {
+  padding-block: var(--space-lg) var(--space-md);
+}
+
+/* Notices and form messages: tinted panel with a hairline border */
+.notice,
+.form-status {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.notice--alert,
+.form-status--error {
+  border-color: #EBC3BF;
+}
+
+.form-status--done {
+  border-color: #B9DBD6;
+}
+
+.schedule > li {
+  border-left: 1px solid var(--line);
+}
+
+/* Partner names: a quiet row of names (text only, never logos) */
+.partner-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+.partner-list li {
+  padding: 0.45rem 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: var(--text-sm);
+}
+
+/* Course and program cards: hairline all round, no heavy top bar */
+.program {
+  border-top: 1px solid var(--line);
+}
+
+/* Areas (What We Do): heading, intro and photo on the left; programs as
+   rows on the right, separated by hairlines rather than boxed in cards. */
+.area {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.area-head > p {
+  max-width: 32rem;
+  color: var(--ink-muted);
+  font-size: var(--text-lg);
+  line-height: 1.5;
+}
+
+.area-media {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-md);
+  border-radius: var(--radius);
+}
+
+.item {
+  padding-block: var(--space-md);
+  border-top: 1px solid var(--line);
+}
+
+.item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.item:last-child {
+  padding-bottom: 0;
+}
+
+.item h3 {
+  margin-bottom: 0.35em;
+}
+
+.item p {
+  max-width: var(--measure);
+  margin: 0 0 0.5rem;
+}
+
+.item-who {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.item-link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-weight: 700;
+}
+
+@media (min-width: 64em) {
+  .area {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-lg) 4rem;
+    align-items: start;
+  }
+
+  .area-head {
+    position: sticky;
+    top: 9rem;
+  }
+}
+
+/* Home: text tile in place of a photo, same 4:3 frame as the photos */
+.tile-media .text-tile {
+  aspect-ratio: 4 / 3;
+  min-height: 0;
+  border-radius: 0;
+}
+
+.hero-facts {
+  margin: 0 0 var(--space-md);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.hero-links {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.hero-links a + a {
+  margin-left: 1.25rem;
+}
+
+/* Inside a two-column split, keep the semester cards two across */
+.split .semester {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.split h3 {
+  margin-top: var(--space-md);
+}
+
+/* Form beside its "what happens next" notes (Join, Naloxone, CPR Classes) */
+.form-layout {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.form-layout .form {
+  margin: 0;
+}
+
+.form-aside {
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+}
+
+.form-aside h3 {
+  margin: 0 0 0.35em;
+}
+
+.form-aside > * + h3,
+.form-aside > div > h3 {
+  margin-top: var(--space-md);
+}
+
+.form-aside p {
+  max-width: 30rem;
+}
+
+@media (min-width: 64em) {
+  .form-layout {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 4rem;
+  }
+}
+
+/* Course cards (CPR Classes): three across on wide screens */
+.courses {
+  display: grid;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.courses > li {
+  margin: 0;
+}
+
+@media (min-width: 48em) {
+  .courses {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.fine-print {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 64em) {
+  .form-layout--flip {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+}
+
+/* Leadership: initials stand in for headshots until the photos arrive */
+.person-initials {
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--navy-900);
+  color: #fff;
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.person {
+  grid-template-columns: 4.5rem 1fr;
+}
+
+@media (min-width: 48em) {
+  .person {
+    grid-template-columns: 4.5rem 1fr;
+    align-items: center;
+  }
+}
+
+.award-photo {
+  margin: 0;
+}
+
+.award-photo img {
+  max-width: 18rem;
+}
+
+@media (min-width: 48em) {
+  .award-photo {
+    justify-self: end;
+  }
+
+  .award-photo img {
+    max-width: 20rem;
+  }
+}
+
+/* FAQ: expandable questions */
+.qa-list {
+  max-width: 48rem;
+  border-top: 1px solid var(--line);
+}
+
+.qa {
+  border-bottom: 1px solid var(--line);
+}
+
+.qa summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1rem;
+  color: var(--navy-900);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.35;
+  list-style: none;
+  cursor: pointer;
+}
+
+.qa summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Chevron drawn with borders; turns when the answer is open */
+.qa summary::after {
+  content: "";
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-right: 0.35rem;
+  border-right: 2px solid var(--navy-700);
+  border-bottom: 2px solid var(--navy-700);
+  transform: translateY(-25%) rotate(45deg);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.qa[open] summary::after {
+  transform: translateY(25%) rotate(-135deg);
+}
+
+.qa summary:hover {
+  color: var(--blue-600);
+}
+
+.qa-body {
+  padding-bottom: 1.1rem;
+}
+
+.qa-body > :last-child {
+  margin-bottom: 0;
+}
+
+.faq-group + .faq-group {
+  margin-top: var(--space-lg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qa summary::after {
+    transition: none;
+  }
+}
+
+/* In an Emergency: steps as cards in a two-column grid */
+.steps-grid {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.step-card {
+  padding: var(--space-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.step-card h2 {
+  font-size: var(--text-xl);
+}
+
+.step-card > :last-child,
+.step-card > .placeholder:last-child {
+  margin-bottom: 0;
+}
+
+.step-card li + li {
+  margin-top: 0.35rem;
+}
+
+@media (min-width: 64em) {
+  .steps-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+  }
+
+  .step-card--wide {
+    grid-column: 1 / -1;
+  }
+}

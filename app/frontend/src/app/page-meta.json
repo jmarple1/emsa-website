@@ -1,0 +1,57 @@
+{
+  "home": {
+    "route": "/",
+    "title": "EMS Alliance (EMSA) | Hands-on training for a safer campus",
+    "description": "EMS Alliance (EMSA) is a registered student organization at Miami University that teaches free CPR, First Aid, and Stop the Bleed classes and distributes naloxone. Any Miami student can join: no requirements, no dues."
+  },
+  "what-we-do": {
+    "route": "/what-we-do",
+    "title": "What We Do | EMS Alliance (EMSA)",
+    "description": "EMSA's programs: free AHA BLS and Heartsaver CPR/First Aid classes, Stop the Bleed training, Project DAWN naloxone distribution, fraternity-house harm reduction, K–6 Outreach, and an AHA Heart Club."
+  },
+  "join": {
+    "route": "/join",
+    "title": "Join EMSA | EMS Alliance (EMSA)",
+    "description": "Join EMS Alliance: open to any Miami student, no requirements, no dues, about 1 hour a week. Hands-on emergency skills, AHA instruction, and volunteer and outreach experience."
+  },
+  "cpr-classes": {
+    "route": "/cpr-classes",
+    "title": "CPR Classes | EMS Alliance (EMSA)",
+    "description": "Free AHA BLS and Heartsaver CPR/First Aid classes and Stop the Bleed training on campus, usually on Sundays. Register for a class or request one for your group."
+  },
+  "naloxone": {
+    "route": "/naloxone",
+    "title": "Naloxone & Harm Reduction | EMS Alliance (EMSA)",
+    "description": "Free naloxone (Narcan) through Ohio's Project DAWN program, fentanyl test strips, and harm reduction supplies from EMSA. No name required to request."
+  },
+  "emergency": {
+    "route": "/emergency",
+    "title": "In an Emergency: Call 911 | EMS Alliance (EMSA)",
+    "description": "In an emergency, call 911. EMS Alliance does not respond to emergencies. What to tell the dispatcher, hands-only CPR, AED basics, and what to do for a suspected opioid overdose."
+  },
+  "events": {
+    "route": "/events",
+    "title": "Events | EMS Alliance (EMSA)",
+    "description": "EMSA's calendar: free CPR classes, general body meetings, the Narcan distribution night, and K–6 Outreach events."
+  },
+  "about": {
+    "route": "/about",
+    "title": "About | EMS Alliance (EMSA)",
+    "description": "EMS Alliance was founded in fall 2024 at Miami University. Leadership, AHA-certified instructors, affiliations, recognition as Miami University's 2024–25 New Student Organization of the Year, and impact so far."
+  },
+  "faq": {
+    "route": "/faq",
+    "title": "FAQ | EMS Alliance (EMSA)",
+    "description": "Answers for prospective members, class participants, and partners: who can join, time commitment, free AHA classes and eCards, affiliations, and why EMSA does not respond to emergencies."
+  },
+  "contact": {
+    "route": "/contact",
+    "title": "Contact | EMS Alliance (EMSA)",
+    "description": "Contact EMS Alliance: email, social media, the club GroupMe, and EMSA's Miami Central page. In an emergency, call 911."
+  },
+  "privacy": {
+    "route": "/privacy",
+    "title": "Privacy | EMS Alliance (EMSA)",
+    "description": "What EMS Alliance collects on its website forms, why, who can see it, and how long it's kept. No cookies, no trackers, and no name on naloxone requests."
+  }
+}

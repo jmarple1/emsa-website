@@ -1,0 +1,81 @@
+<div class="page-head">
+  <div class="wrap">
+    <h1>About EMSA</h1>
+    <p class="lead">EMS Alliance (EMSA) is a registered student organization at Miami University in Oxford, Ohio. Max Ilecki founded EMSA in fall 2024. Its members are largely pre-health students, including certified EMTs.</p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="mission-title">
+  <div class="wrap">
+    <div class="measure">
+    <h2 id="mission-title">Our mission</h2>
+    <p>EMSA promotes EMS education and public health on campus through CPR, First Aid, and Stop the Bleed classes; harm reduction, including Narcan kits and fentanyl test strips; and hands-on training that builds leadership, service, and a safer campus.</p>
+    <h3 id="goal-title">Where we're headed</h3>
+    <!-- The first response unit is a long-term goal only (CLAUDE.md non-negotiable 4). Keep all three statements below. -->
+    <p>EMSA's long-term goal is a student EMT first response unit at Miami. That unit is not operating and has not been approved, and EMSA does not respond to emergencies. In an emergency, call 911.</p>
+    <!-- TODO: photo. Group photo of members (landscape), coming from Max. Confirm consent before publishing. -->
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="leadership-title">
+  <div class="wrap">
+    <h2 id="leadership-title">Leadership</h2>
+    <!-- Edited at /admin > Site content > "Leadership". Initials stand in until square headshots arrive from Max
+         (same background if possible, brief section 10). -->
+    <ul class="people">
+      @for (p of leaders(); track $index) {
+        <li class="person">
+          <div class="person-initials" aria-hidden="true">{{ initials(p.name) }}</div>
+          <div>
+            <h3 class="person-name">{{ p.name }}</h3>
+            <p class="person-role">{{ p.role }}</p>
+          </div>
+        </li>
+      }
+    </ul>
+    <p class="measure">Max and Jordan are certified AHA instructors.@if (!edited()) { Additional officers will be listed after elections.}</p>
+    <!-- Edited at /admin > Site content > "Web and social media officer" (brief section 7). -->
+    @if (content.get('web_officer'); as officer) {
+      <p><strong>Website, social media, and weekly update:</strong> {{ officer }}</p>
+    }
+  </div>
+</section>
+
+<section class="section" aria-labelledby="impact-title">
+  <div class="wrap">
+    <h2 id="impact-title">Impact so far</h2>
+    <!-- Impact numbers (brief section 7), edited at /admin > Site content. Members: show "60+ members"
+         (61 registered on Miami Central); never claim active members. -->
+    <ul class="stats stats--cards">
+      <li><span class="stat-number">{{ impact.fmt('cpr_certified') }}</span> <span class="stat-label">students certified in CPR</span></li>
+      <li><span class="stat-number">{{ impact.fmt('stop_the_bleed') }}</span> <span class="stat-label">trained in Stop the Bleed</span></li>
+      <li><span class="stat-number">{{ impact.fmt('narcan_kits') }}</span> <span class="stat-label">Narcan kits</span></li>
+      <li><span class="stat-number">{{ impact.fmt('test_strips') }}</span> <span class="stat-label">fentanyl test strips</span></li>
+      <li><span class="stat-number">{{ impact.fmt('frat_houses') }}</span> <span class="stat-label">fraternity houses</span></li>
+      <li><span class="stat-number">{{ impact.fmt('members') }}</span> <span class="stat-label">members</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="affiliations-title">
+  <div class="wrap split">
+    <div>
+      <h2 id="affiliations-title">Affiliations and recognition</h2>
+      <!-- Names in text only, never logos. Nothing here may suggest that the AHA sponsors EMSA's classes. -->
+      <ul>
+        <li><strong>American Heart Association:</strong> EMSA's instructors are certified AHA instructors, and EMSA runs an AHA Heart Club.</li>
+        <li><strong>Project DAWN, Ohio Department of Health:</strong> EMSA distributes free naloxone on campus through Project DAWN.</li>
+        <li><strong>Butler County General Health District and Miami University's Office of Student Wellness:</strong> partners in EMSA's fraternity-house harm reduction program.</li>
+        <li><strong>National Collegiate EMS Foundation (NCEMSF):</strong> EMSA is a member organization. Its New Group Initiative grant funded EMSA's trip to the NCEMSF national conference.</li>
+        <li><strong>Miami University:</strong> 2024–25 New Student Organization of the Year.</li>
+      </ul>
+      <!-- TODO: photo. One photo from the NCEMSF national conference, coming from Max. Confirm consent before publishing. -->
+    </div>
+    <figure class="award-photo">
+      <!-- Photo F is marked Ready in PHOTO-DIRECTIONS. The award itself carries Miami University's wordmark; the photo is
+           shown as taken and never altered (see MORNING-REVIEW.md). -->
+      <img src="/photos/F-award-trophy.jpg" alt="Miami University's 2024–2025 New Student Organization of the Year award, presented to the Emergency Medical Services Alliance." width="988" height="1312" loading="lazy">
+    </figure>
+  </div>
+</section>

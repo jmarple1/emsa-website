@@ -1,0 +1,140 @@
+<div class="page-head">
+  <div class="wrap">
+    <h1>Frequently asked questions</h1>
+    <nav class="toc" aria-label="On this page">
+      <ul>
+        <li><a routerLink="/faq" fragment="members">Prospective members</a></li>
+        <li><a routerLink="/faq" fragment="classes">Class participants</a></li>
+        <li><a routerLink="/faq" fragment="partners">Partners</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="wrap faq">
+    <section id="members" class="faq-group" aria-labelledby="members-title">
+      <h2 id="members-title">Prospective members</h2>
+      <div class="qa-list">
+      <details class="qa">
+        <summary>Who can join?</summary>
+        <div class="qa-body">
+          <p>Any Miami student. There are no prerequisites and no dues.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>Do I need medical experience?</summary>
+        <div class="qa-body">
+          <p>No. Training is provided.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>How much time does it take?</summary>
+        <div class="qa-body">
+          <p>About 1 hour a week.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>What does a semester look like?</summary>
+        <div class="qa-body">
+          <p>4 general body meetings, 3 CPR classes, 1 Narcan distribution night, and 1 K–6 Outreach event, plus optional Outreach Team work if you want more.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>How do I join, and what happens next?</summary>
+        <div class="qa-body">
+          <p>Fill out the <a routerLink="/join" fragment="interest-form">interest form on the Join page</a>. You'll get a confirmation with the GroupMe link; then come to the next meeting.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>I'm already an EMT. Is there a role for me?</summary>
+        <div class="qa-body">
+          <p>Yes. EMTs help teach and staff classes and events. EMSA is not a first response unit, but we aspire to build one at Miami, and EMTs who want to help shape that effort are especially welcome.</p>
+        </div>
+      </details>
+      </div>
+    </section>
+
+    <section id="classes" class="faq-group" aria-labelledby="classes-title">
+      <h2 id="classes-title">Class participants</h2>
+      <div class="qa-list">
+      <details class="qa">
+        <summary>Which courses do you offer?</summary>
+        <div class="qa-body">
+          <p>AHA BLS, Heartsaver CPR/First Aid, and Stop the Bleed.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>Do I get a real AHA card?</summary>
+        <div class="qa-body">
+          <p>Yes. BLS and Heartsaver participants receive an AHA eCard issued through the Therapeutic Professionals Training Center.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>How much does it cost?</summary>
+        <div class="qa-body">
+          <p>Nothing. Classes are free.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>How long is my card valid?</summary>
+        <div class="qa-body">
+          <p>Two years, through the end of the month it was issued.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>When and where are classes?</summary>
+        <div class="qa-body">
+          <p>On campus, usually on Sundays. Dates are on the <a routerLink="/events">Events calendar</a>.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>How do I register?</summary>
+        <div class="qa-body">
+          <p>Through the <a routerLink="/cpr-classes" fragment="register">registration form on the CPR Classes page</a>.</p>
+        </div>
+      </details>
+      </div>
+    </section>
+
+    <section id="partners" class="faq-group" aria-labelledby="partners-title">
+      <h2 id="partners-title">Partners</h2>
+      <div class="qa-list">
+      <details class="qa">
+        <summary>Who leads EMSA, and who is the faculty advisor?</summary>
+        <div class="qa-body">
+          <p>Co-Presidents Max Ilecki and Jordan Vandeventer lead EMSA, and Leslie Haxby-McNeill is the faculty advisor. The <a routerLink="/about" fragment="leadership-title">About page</a> lists current officers.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>What are your affiliations and recognition?</summary>
+        <div class="qa-body">
+          <p>Max and Jordan are certified AHA instructors, and EMSA runs an AHA Heart Club. EMSA distributes naloxone through Project DAWN (Ohio Department of Health) and runs its fraternity-house harm reduction program with the Butler County General Health District and Miami's Office of Student Wellness. EMSA is a National Collegiate EMS Foundation (NCEMSF) member organization, received NCEMSF's New Group Initiative grant, and was named Miami University's 2024–25 New Student Organization of the Year.</p>
+        </div>
+      </details>
+      <details class="qa">
+        <summary>How do you distribute naloxone and test strips in line with Ohio requirements?</summary>
+        <div class="qa-body">
+          <!-- TODO: content. Confirm or expand this answer before publishing. Brief section 5 poses the question without an answer,
+          so the answer below uses only facts from the brief. -->
+          <p>EMSA distributes naloxone through Ohio's Project DAWN program, and its fraternity-house program runs with the Butler County General Health District and Miami's Office of Student Wellness. Kits are free and may not be resold.</p>
+          <!-- Edited at /admin > Site content > "FAQ: Ohio requirements". -->
+          @if (content.paragraphs('faq_ohio').length) {
+          @for (p of content.paragraphs('faq_ohio'); track $index) {<p>{{ p }}</p>}
+          } @else {
+          <div class="placeholder">
+          <p><span class="placeholder-tag">Placeholder</span> How EMSA's distribution follows Ohio's requirements, once Max or the health district confirms the details.</p>
+          </div>
+          }
+        </div>
+      </details>
+      <details class="qa">
+        <summary>Does EMSA respond to emergencies?</summary>
+        <div class="qa-body">
+          <p>No. EMSA is not a first response unit; in an emergency, call 911. Building a student EMT first response unit is a long-term goal. That unit is not operating and has not been approved.</p>
+        </div>
+      </details>
+      </div>
+    </section>
+  </div>
+</div>

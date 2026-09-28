@@ -1,0 +1,146 @@
+<div class="page-head">
+  <div class="wrap">
+    <h1>Join EMSA</h1>
+    <p class="lead">Any Miami student can join. There are no requirements and no dues, and it takes about 1 hour a week.</p>
+    <p class="btn-row"><a class="btn btn-primary btn-lg" routerLink="/join" fragment="interest-form">Fill out the interest form</a></p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="benefits-title">
+  <div class="wrap split">
+    <div>
+      <h2 id="benefits-title">What you get</h2>
+      <ul class="checklist">
+        <li>Hands-on emergency skills</li>
+        <li>AHA instruction from EMSA's certified instructors</li>
+        <li>Volunteer and outreach experience</li>
+        <li>A community of pre-health students</li>
+        <li>Resume value for medical, nursing, PA, and EMS applications</li>
+      </ul>
+      <h3 id="semester-title">A typical semester</h3>
+      <ul class="semester" aria-labelledby="semester-title">
+        <li><span class="semester-number">4</span> general body meetings</li>
+        <li><span class="semester-number">3</span> CPR classes</li>
+        <li><span class="semester-number">1</span> Narcan distribution night</li>
+        <li><span class="semester-number">1</span> K–6 Outreach event</li>
+      </ul>
+      <p>Want more? Join the Outreach Team.</p>
+      <p><strong>EMTs:</strong> you'll help teach and staff classes and events. EMSA is not a first response unit, but it aspires to build one at Miami, and EMTs who want to help shape that effort are especially welcome.</p>
+    </div>
+    <div>
+      <!-- TODO: consent. Photo A shows four identifiable students and their consent is still pending (PHOTO-DIRECTIONS).
+           Do not publish until Max confirms it. Swap in the group photo here when it arrives. -->
+      <img class="rounded" src="/photos/A-home-hero-CROP-3x2.jpg" alt="EMSA members practicing CPR on manikins during a class at Miami University." width="1440" height="960" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section id="interest-form" class="section section-alt" aria-labelledby="form-title">
+  <div class="wrap">
+    <h2 id="form-title">Interest form</h2>
+    <div class="form-layout">
+    <div>
+    <!-- Join interest form. Fields are exactly brief section 6. Submissions go to the join_submissions table;
+         officers see them at /admin. -->
+    <form id="join-form" class="form" [formGroup]="f.form" (ngSubmit)="submit()" novalidate aria-labelledby="form-title">
+      <p class="field-hint">All fields are required unless marked optional.</p>
+
+      <div class="field">
+        <label for="join-name">Name</label>
+        <input id="join-name" type="text" formControlName="name" autocomplete="name" maxlength="200"
+               [attr.aria-invalid]="!!f.error('name')" [attr.aria-describedby]="f.error('name') ? 'join-name-error' : null">
+        @if (f.error('name'); as e) {<p class="field-error" id="join-name-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="field">
+        <label for="join-email">Miami email</label>
+        <p class="field-hint" id="join-email-hint">Ends in &#64;miamioh.edu</p>
+        <input id="join-email" type="email" formControlName="miami_email" autocomplete="email" maxlength="254"
+               [attr.aria-invalid]="!!f.error('miami_email')"
+               [attr.aria-describedby]="f.error('miami_email') ? 'join-email-hint join-email-error' : 'join-email-hint'">
+        @if (f.error('miami_email'); as e) {<p class="field-error" id="join-email-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="field">
+        <label for="join-year">Year</label>
+        <select id="join-year" formControlName="year"
+                [attr.aria-invalid]="!!f.error('year')" [attr.aria-describedby]="f.error('year') ? 'join-year-error' : null">
+          <option value="">Choose your year</option>
+          @for (y of years; track y) {<option [value]="y">{{ y }}</option>}
+        </select>
+        @if (f.error('year'); as e) {<p class="field-error" id="join-year-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="field">
+        <label for="join-major">Major</label>
+        <input id="join-major" type="text" formControlName="major" maxlength="200"
+               [attr.aria-invalid]="!!f.error('major')" [attr.aria-describedby]="f.error('major') ? 'join-major-error' : null">
+        @if (f.error('major'); as e) {<p class="field-error" id="join-major-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <fieldset class="field" [attr.aria-invalid]="!!f.error('emt_certified')"
+                [attr.aria-describedby]="f.error('emt_certified') ? 'join-emt-error' : null">
+        <legend>Are you EMT certified?</legend>
+        <label class="choice"><input type="radio" formControlName="emt_certified" [value]="true"> Yes</label>
+        <label class="choice"><input type="radio" formControlName="emt_certified" [value]="false"> No</label>
+        @if (f.error('emt_certified'); as e) {<p class="field-error" id="join-emt-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </fieldset>
+
+      <div class="field">
+        <label for="join-heard">How did you hear about EMSA? (optional)</label>
+        <input id="join-heard" type="text" formControlName="heard_from" maxlength="500"
+               [attr.aria-invalid]="!!f.error('heard_from')" [attr.aria-describedby]="f.error('heard_from') ? 'join-heard-error' : null">
+        @if (f.error('heard_from'); as e) {<p class="field-error" id="join-heard-error"><span class="visually-hidden">Error: </span>{{ e }}</p>}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="f.status() === 'sending'">
+          {{ f.status() === 'sending' ? 'Sending…' : 'Send interest form' }}
+        </button>
+      </div>
+
+      <!-- Confirmation copy per brief section 6: next meeting + GroupMe link. -->
+      <div role="status" aria-live="polite">
+        @if (f.status() === 'done') {
+          <div class="form-status form-status--done">
+            <p><strong>Thanks for your interest in EMS Alliance!</strong>
+              @if (nextMeeting()) { Our next general body meeting is {{ nextMeeting() }}. }
+              <a href="https://groupme.com/join_group/117642476/zucoqhJi">Join the EMSA GroupMe</a> to get our weekly update.
+              An officer will add you if you haven't joined yet. See you there!</p>
+          </div>
+        } @else if (f.status() === 'error') {
+          <p class="form-status form-status--error">{{ f.message() }}</p>
+        }
+      </div>
+    </form>
+    </div>
+    <aside class="form-aside" aria-label="After you sign up">
+      <h3>What happens next</h3>
+      <p>You'll get a confirmation with the next meeting and the club GroupMe link. An officer adds you to the GroupMe for the weekly update, and you're invited to the next general body meeting.</p>
+      <p><strong>Also register on Miami Central.</strong> New members should sign up on <a href="https://miamicentral.miamioh.edu/EMSA/club_signup">EMSA's Miami Central page</a> too.</p>
+      <div id="already-a-member">
+        <h3>Already a member but not active?</h3>
+        <p>Jumping back in is easy: join the GroupMe and come to the next general body meeting.</p>
+        <!-- Edited at /admin > Site content > "Next general body meeting". -->
+        @if (nextMeeting(); as meeting) {
+          <p><strong>Next meeting:</strong> {{ meeting }}</p>
+        }
+        <p><a class="btn btn-secondary" href="https://groupme.com/join_group/117642476/zucoqhJi">Join the EMSA GroupMe</a></p>
+      </div>
+    </aside>
+    </div>
+  </div>
+</section>
+
+<!-- Edited at /admin > Site content > "Open officer roles": one role per line, when elections approach.
+     The section only shows when roles are listed. -->
+@if (content.lines('officer_roles').length) {
+  <section class="section section-alt" aria-labelledby="roles-title">
+    <div class="wrap">
+      <h2 id="roles-title">Open officer roles</h2>
+      <ul class="checklist">
+        @for (role of content.lines('officer_roles'); track $index) {<li>{{ role }}</li>}
+      </ul>
+    </div>
+  </section>
+}

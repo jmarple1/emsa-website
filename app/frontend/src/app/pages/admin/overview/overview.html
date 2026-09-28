@@ -1,0 +1,162 @@
+<!-- One filter row above everything it scopes. -->
+<div class="dash-filters" role="group" aria-label="Date range">
+  @for (r of ranges; track r.value) {
+    <button type="button" class="seg" [attr.aria-pressed]="range() === r.value" (click)="range.set(r.value)">{{ r.label }}</button>
+  }
+  <button type="button" class="dash-link" (click)="load()">Refresh</button>
+</div>
+
+@if (error()) {
+  <p class="form-status form-status--error" role="alert">{{ error() }}</p>
+}
+
+<div class="dash-body" [class.is-loading]="loading()">
+  <!-- KPI row -->
+  <ul class="kpis">
+    @for (k of kpis(); track k.label) {
+      <li class="kpi card-surface">
+        <p class="kpi-label">{{ k.label }}</p>
+        <p class="kpi-value">{{ k.value.toLocaleString('en-US') }}</p>
+        @if (k.delta !== null) {
+          @if (k.delta === 0) {
+            <p class="kpi-delta">No change vs previous period</p>
+          } @else {
+            <p class="kpi-delta" [class.is-good]="k.upIsGood !== null && (k.delta > 0) === k.upIsGood" [class.is-bad]="k.upIsGood !== null && (k.delta > 0) !== k.upIsGood">
+              <span aria-hidden="true">{{ k.delta > 0 ? '▲' : '▼' }}</span>
+              {{ k.delta > 0 ? 'Up' : 'Down' }} {{ abs(k.delta) }} vs previous period
+            </p>
+          }
+        } @else {
+          <p class="kpi-delta">{{ rangeLabel() }}</p>
+        }
+        @if (k.note) {<p class="kpi-note">{{ k.note }}</p>}
+      </li>
+    }
+  </ul>
+
+  <div class="dash-grid">
+    <!-- Sign-ups per week -->
+    <section class="dash-card card-surface dash-card--wide" aria-labelledby="c-weekly">
+      <header class="dash-card-head">
+        <div>
+          <h3 id="c-weekly">Join sign-ups per week</h3>
+          <p class="dash-card-sub">{{ weeklyTotal() }} {{ inRangeLabel() }}</p>
+        </div>
+        <button type="button" class="dash-link" (click)="toggleTable('weekly')">{{ showTable()['weekly'] ? 'Show chart' : 'Show as table' }}</button>
+      </header>
+      @if (showTable()['weekly']) {
+        <div class="table-wrap"><table class="data-table">
+          <thead><tr><th scope="col">Week of</th><th scope="col" class="num">Sign-ups</th></tr></thead>
+          <tbody>@for (w of weekly(); track w.tip) {<tr><td>{{ w.label }}</td><td class="num">{{ w.value }}</td></tr>}</tbody>
+        </table></div>
+      } @else if (weeklyTotal() === 0) {
+        <p class="dash-empty">No sign-ups in this period yet.</p>
+      } @else {
+        <app-column-chart [data]="weekly()" unit="sign-ups" />
+      }
+    </section>
+
+    <!-- Sign-ups by year -->
+    <section class="dash-card card-surface" aria-labelledby="c-year">
+      <header class="dash-card-head">
+        <div>
+          <h3 id="c-year">Sign-ups by year</h3>
+          <p class="dash-card-sub">{{ emt().yes }} of {{ emt().total }} ({{ emt().pct }}%) are EMT certified</p>
+        </div>
+        <button type="button" class="dash-link" (click)="toggleTable('year')">{{ showTable()['year'] ? 'Show chart' : 'Show as table' }}</button>
+      </header>
+      @if (showTable()['year']) {
+        <div class="table-wrap"><table class="data-table">
+          <thead><tr><th scope="col">Year</th><th scope="col" class="num">Sign-ups</th></tr></thead>
+          <tbody>@for (y of byYear(); track y.label) {<tr><td>{{ y.label }}</td><td class="num">{{ y.value }}</td></tr>}</tbody>
+        </table></div>
+      } @else if (emt().total === 0) {
+        <p class="dash-empty">No sign-ups in this period yet.</p>
+      } @else {
+        <app-bar-list [data]="byYear()" />
+      }
+    </section>
+
+    <!-- Upcoming classes -->
+    <section class="dash-card card-surface" aria-labelledby="c-classes">
+      <header class="dash-card-head">
+        <div>
+          <h3 id="c-classes">Upcoming classes</h3>
+          <p class="dash-card-sub">Seats filled, all upcoming open classes</p>
+        </div>
+      </header>
+      @if (classes().length === 0) {
+        <p class="dash-empty">No upcoming classes. Add one in the Classes tab.</p>
+      } @else {
+        <ul class="meters">
+          @for (c of classes(); track c.id) {
+            <li>
+              <p class="meter-head"><strong>{{ c.course }}</strong> <span>{{ when(c.starts_at, c.ends_at) }}</span></p>
+              <div class="meter" role="meter" aria-valuemin="0" [attr.aria-valuemax]="c.capacity"
+                   [attr.aria-valuenow]="c.capacity - c.seats_left" [attr.aria-label]="c.course + ' seats filled'">
+                <span class="meter-fill" [style.width.%]="fill(c)"></span>
+              </div>
+              <p class="meter-note">{{ c.capacity - c.seats_left }} of {{ c.capacity }} seats filled{{ c.seats_left === 0 ? ' · Full' : '' }}</p>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <!-- Site visits (cookie-free counts, see /privacy) -->
+    <section class="dash-card card-surface dash-card--wide" aria-labelledby="c-views">
+      <header class="dash-card-head">
+        <div>
+          <h3 id="c-views">Page views per week</h3>
+          <p class="dash-card-sub">{{ viewsTotal().toLocaleString('en-US') }} {{ inRangeLabel() }}. Counted without cookies or IP addresses; officers and visitors who opt out of tracking aren't counted.</p>
+        </div>
+        <button type="button" class="dash-link" (click)="toggleTable('views')">{{ showTable()['views'] ? 'Show chart' : 'Show as table' }}</button>
+      </header>
+      @if (showTable()['views']) {
+        <div class="table-wrap"><table class="data-table">
+          <thead><tr><th scope="col">Week of</th><th scope="col" class="num">Page views</th></tr></thead>
+          <tbody>@for (w of viewsWeekly(); track w.tip) {<tr><td>{{ w.label }}</td><td class="num">{{ w.value }}</td></tr>}</tbody>
+        </table></div>
+      } @else if (viewsTotal() === 0) {
+        <p class="dash-empty">No page views counted in this period yet.</p>
+      } @else {
+        <app-column-chart [data]="viewsWeekly()" unit="page views" />
+      }
+    </section>
+
+    <!-- Naloxone by item -->
+    <section class="dash-card card-surface" aria-labelledby="c-items">
+      <header class="dash-card-head">
+        <div>
+          <h3 id="c-items">Naloxone requests by item</h3>
+          <p class="dash-card-sub">Totals only. A request can include several items.</p>
+        </div>
+        <button type="button" class="dash-link" (click)="toggleTable('items')">{{ showTable()['items'] ? 'Show chart' : 'Show as table' }}</button>
+      </header>
+      @if (showTable()['items']) {
+        <div class="table-wrap"><table class="data-table">
+          <thead><tr><th scope="col">Item</th><th scope="col" class="num">Requests</th></tr></thead>
+          <tbody>@for (i of items(); track i.label) {<tr><td>{{ i.label }}</td><td class="num">{{ i.value }}</td></tr>}</tbody>
+        </table></div>
+      } @else if (itemsTotal() === 0) {
+        <p class="dash-empty">No naloxone requests in this period.</p>
+      } @else {
+        <app-bar-list [data]="items()" />
+      }
+    </section>
+
+    <section class="dash-card card-surface" aria-labelledby="c-pages">
+      <header class="dash-card-head">
+        <div>
+          <h3 id="c-pages">Most viewed pages</h3>
+          <p class="dash-card-sub">Top pages {{ inRangeLabel() }}</p>
+        </div>
+      </header>
+      @if (topPages().length === 0) {
+        <p class="dash-empty">No page views counted in this period yet.</p>
+      } @else {
+        <app-bar-list [data]="topPages()" />
+      }
+    </section>
+  </div>
+</div>

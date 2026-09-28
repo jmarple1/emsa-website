@@ -1,0 +1,54 @@
+<div class="page-head">
+  <div class="wrap">
+    <h1>Contact EMSA</h1>
+    <p class="lead">Questions about joining, classes, or naloxone? Here's how to reach EMSA.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="wrap">
+    <div class="notice notice--alert measure">
+      <p><strong>In an emergency, call 911.</strong> EMSA does not respond to emergencies.</p>
+    </div>
+    <div class="split">
+      <!-- Edited at /admin > Site content > "Contact email" (the EMSA entity email only, never a personal address). -->
+      @if (content.get('contact_email'); as email) {
+        <section aria-labelledby="email-title">
+          <h2 id="email-title">Email</h2>
+          <p><a [href]="'mailto:' + email">{{ email }}</a></p>
+        </section>
+      }
+      <!-- Edited at /admin > Site content > "Social media links". Name each link after the platform. -->
+      @if (content.links('social_links').length) {
+        <section aria-labelledby="social-title">
+          <h2 id="social-title">Social media</h2>
+          <ul>
+            @for (link of content.links('social_links'); track link.url) {<li><a [href]="link.url">{{ link.label }}</a></li>}
+          </ul>
+        </section>
+      }
+      <section aria-labelledby="groupme-title">
+        <h2 id="groupme-title">GroupMe</h2>
+        <p>EMSA posts a weekly update in the club GroupMe.</p>
+        <p><a class="btn btn-secondary" href="https://groupme.com/join_group/117642476/zucoqhJi">Join the EMSA GroupMe</a></p>
+      </section>
+      <section aria-labelledby="central-title">
+        <h2 id="central-title">Miami Central</h2>
+        <p>Register as a member on EMSA's Miami Central page.</p>
+        <p><a class="btn btn-secondary" href="https://miamicentral.miamioh.edu/EMSA/club_signup">Register with EMSA on Miami Central</a></p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<section class="section section-alt" aria-labelledby="requests-title">
+  <div class="wrap">
+    <h2 id="requests-title">Forms and requests</h2>
+    <ul class="measure">
+      <li><a routerLink="/join" fragment="interest-form">Membership interest form</a></li>
+      <li><a routerLink="/cpr-classes" fragment="register">Register for a free class</a></li>
+      <li><a routerLink="/cpr-classes" fragment="group-request">Request a class for your group</a></li>
+      <li><a routerLink="/naloxone" fragment="request">Request naloxone or harm reduction supplies</a></li>
+    </ul>
+  </div>
+</section>
