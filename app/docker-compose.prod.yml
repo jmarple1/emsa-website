@@ -1,5 +1,5 @@
 # ============================================================
-# Production overrides for the shared EC2 server (18.189.134.211),
+# Production overrides for the shared EC2 server,
 # where EMSA runs next to KnottSoDirtyCo.
 #
 #   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d

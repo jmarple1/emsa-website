@@ -53,10 +53,10 @@ The first build takes a few minutes; after that it starts in seconds. Open `http
 
 ## 2. Create an officer account
 
-There is no public sign-up page on purpose. Anyone who can run commands on the server can add an officer. On the live server (from a Windows PowerShell window with the server key):
+There is no public sign-up page on purpose. Anyone who can run commands on the server can add an officer. On the live server (see "Server access" in section 4 for `KEY` and `SERVER`):
 
-```powershell
-ssh -i "C:\path\to\TalbotKey.pem" -t ubuntu@18.189.134.211 "cd ~/emsa && ./scripts/create-officer.sh"
+```bash
+ssh -i "$KEY" -t "$SERVER" "cd ~/emsa && ./scripts/create-officer.sh"
 ```
 
 Locally, run `./scripts/create-officer.sh` from the `app/` folder (Git Bash on Windows).
@@ -90,25 +90,32 @@ Naloxone requests are private (brief §11). Don't copy them anywhere else.
 
 ## 4. The live site (how it's set up)
 
-**https://emsamu.site** runs on the same AWS EC2 server as KnottSoDirtyCo (`18.189.134.211`, an Elastic IP, Ubuntu, t3.micro, 20 GB disk, 1 GB swap). DNS is at Namecheap: A records for `@` and `www` point to that IP.
+**https://emsamu.site** runs on a small AWS EC2 server shared with another site, KnottSoDirtyCo. DNS is at Namecheap.
+
+**Server access.** The server's address, login user, and SSH key are **not in this repo**, on purpose, because the repo is public. The web officer keeps them privately and hands them to their successor, along with the AWS and Namecheap logins. The commands below assume you've set two variables first (Git Bash):
+
+```bash
+KEY=/path/to/server-key.pem     # the private SSH key; never commit it
+SERVER=user@server-address      # from the web officer
+```
 
 | Piece | Where |
 |---|---|
 | EMSA's containers (postgres, backend, frontend) | `~/emsa` on the server, started with `docker-compose.yml` + `docker-compose.prod.yml` |
 | Secrets (DB password, JWT secret) | `~/emsa/.env` on the server only (generated there, never in Git) |
-| HTTPS for **both** sites | KnottSoDirty's nginx container (`~/talbot/nginx-https.conf`) holds ports 80/443. The `emsamu.site` blocks in it come from `deploy/emsamu.site.conf`; it reaches EMSA over the shared `edge` Docker network |
-| Certificates | Let's Encrypt via certbot on the server; renews automatically. Hooks in `/etc/letsencrypt/renewal-hooks/` stop and restart KnottSoDirty's web container for the ~10 seconds renewal needs |
+| HTTPS for **both** sites | KnottSoDirty's nginx container holds ports 80/443. Its `emsamu.site` blocks come from `deploy/emsamu.site.conf`; it reaches EMSA over the shared `edge` Docker network |
+| Certificates | Let's Encrypt via certbot on the server; renews automatically. Renewal hooks briefly stop and restart KnottSoDirty's web container while it renews |
 
-**Deploying an update.** The server is too small (1 GB) to build the Angular app, so build on a PC and copy the images:
+**Deploying an update.** The server is too small to build the Angular app, so build on a PC and copy the images:
 
 ```bash
 cd app
 docker compose build                     # builds emsa-backend and emsa-frontend
 docker save emsa-backend:latest emsa-frontend:latest | gzip -1 | \
-  ssh -i TalbotKey.pem ubuntu@18.189.134.211 'gunzip | docker load'
-scp -i TalbotKey.pem docker-compose.yml docker-compose.prod.yml ubuntu@18.189.134.211:emsa/
-scp -i TalbotKey.pem -r database scripts deploy ubuntu@18.189.134.211:emsa/
-ssh -i TalbotKey.pem ubuntu@18.189.134.211 \
+  ssh -i "$KEY" "$SERVER" 'gunzip | docker load'
+scp -i "$KEY" docker-compose.yml docker-compose.prod.yml "$SERVER":emsa/
+scp -i "$KEY" -r database scripts deploy "$SERVER":emsa/
+ssh -i "$KEY" "$SERVER" \
   'cd ~/emsa && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d && docker image prune -f'
 ```
 
@@ -121,7 +128,7 @@ Schema changes in `database/schema.sql` apply automatically when the backend res
 **Backups** run every night at 3:15 a.m. Oxford time (cron on the server runs `scripts/backup.sh`) for both EMSA and KnottSoDirty. They land in `~/backups/emsa/` and `~/backups/talbot/` and are kept for 14 days. Check them with `ls -lh ~/backups/emsa`. To copy the newest one off the server:
 
 ```bash
-scp -i TalbotKey.pem "ubuntu@18.189.134.211:backups/emsa/*$(date +%F).sql.gz" .
+scp -i "$KEY" "$SERVER:backups/emsa/*$(date +%F).sql.gz" .
 ```
 
 A backup on the same server doesn't survive losing the server, so copy one to the EMSA Google Drive now and then, and never keep them on a personal laptop, because they contain submissions. To restore: `gunzip -c emsa-DATE.sql.gz | docker exec -i emsa-postgres-1 psql -U emsa_user emsa` (into an empty database).
